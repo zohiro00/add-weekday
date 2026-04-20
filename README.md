@@ -70,7 +70,6 @@ GitHub Pages 公開は、`.github/workflows/deploy-pages.yml` で自動化して
 
 
 ## 今後の拡張案
-
 - VSCode拡張機能
 - 日本語日付（例：4月20日）対応
 - CLIツール化
