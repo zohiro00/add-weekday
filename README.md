@@ -58,12 +58,18 @@ GitHub Pages 公開は、`.github/workflows/deploy-pages.yml` で自動化して
 
 ### 公開手順
 
-1. GitHub リポジトリの **Settings > Pages** で **Build and deployment** を **GitHub Actions** に設定
-2. `main` ブランチに push
-3. Actions の `Deploy sample to GitHub Pages` が成功後、公開 URL が発行される
+1. `main` ブランチに push（または Actions を手動実行）
+2. `Deploy sample to GitHub Pages` が実行され、必要に応じて Pages 設定を自動有効化
+3. ワークフロー成功後、公開 URL が発行される
+
+
+公開後のアクセス先:
+
+- ルート: `https://<user>.github.io/<repo>/`
+- 直接: `https://<user>.github.io/<repo>/docs/index.html`
+
 
 ## 今後の拡張案
-
 - VSCode拡張機能
 - 日本語日付（例：4月20日）対応
 - CLIツール化
