@@ -1,138 +1,1315 @@
 <!doctype html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>add-weekday sample</title>
-    <style>
-      :root {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans JP", sans-serif;
-        color: #1f2937;
-        background: #f8fafc;
-      }
-      body {
-        margin: 0;
-        padding: 24px;
-      }
-      .container {
-        max-width: 840px;
-        margin: 0 auto;
-        background: white;
-        padding: 24px;
-        border-radius: 12px;
-        box-shadow: 0 6px 24px rgba(15, 23, 42, 0.08);
-      }
-      h1 { margin-top: 0; }
-      .grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 16px;
-      }
-      @media (min-width: 900px) {
-        .grid {
-          grid-template-columns: 1fr 1fr;
-        }
-      }
-      label {
-        display: block;
-        margin-bottom: 6px;
-        font-weight: 600;
-      }
-      textarea {
-        width: 100%;
-        box-sizing: border-box;
-        min-height: 220px;
-        border-radius: 8px;
-        border: 1px solid #cbd5e1;
-        padding: 12px;
-        font-size: 14px;
-        line-height: 1.6;
-        resize: vertical;
-      }
-      .controls {
-        margin-top: 16px;
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-      }
-      button {
-        border: none;
-        border-radius: 8px;
-        padding: 10px 14px;
-        font-size: 14px;
-        cursor: pointer;
-      }
-      #convertBtn { background: #2563eb; color: white; }
-      #copyBtn { background: #0f766e; color: white; }
-      #status {
-        margin-top: 10px;
-        min-height: 1.5em;
-        color: #334155;
-        font-size: 14px;
-      }
-      .hint {
-        margin-top: 8px;
-        font-size: 12px;
-        color: #64748b;
-      }
-    </style>
-  </head>
-  <body>
-    <main class="container">
-      <h1>add-weekday サンプル</h1>
-      <p>
-        npm パッケージ <code>add-weekday</code> を使って、日付に曜日を追加するデモです。
-      </p>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>add-weekday — 日付に曜日追加</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<style>
+  :root {
+    /* VS Code Dark+ palette */
+    --bg-activity: #333333;
+    --bg-sidebar: #252526;
+    --bg-editor: #1e1e1e;
+    --bg-panel: #1e1e1e;
+    --bg-statusbar: #007ACC;
+    --bg-titlebar: #3c3c3c;
+    --bg-input: #3c3c3c;
+    --bg-hover: #2a2d2e;
+    --bg-active: #37373d;
+    --bg-tab-active: #1e1e1e;
+    --bg-tab-inactive: #2d2d2d;
 
-      <div class="grid">
-        <section>
-          <label for="input">原文</label>
-          <textarea id="input" placeholder="例: 会議は4/20と2026/04/22です"></textarea>
-        </section>
+    --border: #1e1e1e;
+    --border-soft: #2b2b2b;
+    --border-input: #3c3c3c;
 
-        <section>
-          <label for="output">追加後</label>
-          <textarea id="output" readonly></textarea>
-        </section>
+    --fg: #cccccc;
+    --fg-muted: #858585;
+    --fg-dim: #6a6a6a;
+    --fg-strong: #ffffff;
+
+    --accent: #007ACC;
+    --accent-hover: #1a8cd8;
+    --accent-focus: #0098ff;
+
+    --syntax-keyword: #569cd6;
+    --syntax-string: #ce9178;
+    --syntax-comment: #6a9955;
+    --syntax-fn: #dcdcaa;
+    --syntax-var: #9cdcfe;
+    --syntax-num: #b5cea8;
+    --syntax-date: #4ec9b0;
+    --syntax-weekday: #c586c0;
+
+    --font-mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; overflow: hidden; }
+  body {
+    background: var(--bg-editor);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ============ App Shell ============ */
+  .app {
+    display: grid;
+    grid-template-rows: 35px 1fr 22px;
+    height: 100vh;
+  }
+
+  /* Title bar */
+  .titlebar {
+    background: var(--bg-titlebar);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    font-size: 12px;
+    color: var(--fg-muted);
+    user-select: none;
+    gap: 16px;
+  }
+  .titlebar-traffic {
+    display: flex;
+    gap: 8px;
+  }
+  .traffic-dot {
+    width: 12px; height: 12px; border-radius: 50%;
+    background: #5a5a5a;
+  }
+  .traffic-dot.red { background: #ff5f56; }
+  .traffic-dot.yellow { background: #ffbd2e; }
+  .traffic-dot.green { background: #27c93f; }
+  .titlebar-title {
+    flex: 1;
+    text-align: center;
+    font-family: var(--font-sans);
+    font-size: 12px;
+  }
+  .titlebar-title .meta {
+    color: var(--fg-dim);
+    margin-left: 8px;
+  }
+  .titlebar-menu {
+    display: flex;
+    gap: 14px;
+    color: var(--fg);
+    font-size: 12px;
+  }
+  .titlebar-menu span { cursor: default; padding: 2px 6px; border-radius: 3px; }
+  .titlebar-menu span:hover { background: rgba(255,255,255,0.08); }
+
+  /* Main body */
+  .body {
+    display: grid;
+    grid-template-columns: 48px auto 1fr;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  /* Activity bar (narrow sidebar w/ icons) */
+  .activity {
+    background: var(--bg-activity);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 6px 0;
+    border-right: 1px solid var(--border);
+  }
+  .activity-btn {
+    width: 48px; height: 48px;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--fg-muted);
+    cursor: pointer;
+    position: relative;
+    border: none;
+    background: transparent;
+    transition: color .12s;
+  }
+  .activity-btn:hover { color: var(--fg-strong); }
+  .activity-btn.active { color: var(--fg-strong); }
+  .activity-btn.active::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 2px;
+    background: var(--fg-strong);
+  }
+  .activity-btn svg { width: 22px; height: 22px; }
+  .activity-spacer { flex: 1; }
+  .activity-btn[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    left: 52px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #252526;
+    border: 1px solid #454545;
+    color: var(--fg);
+    padding: 4px 8px;
+    font-size: 12px;
+    white-space: nowrap;
+    border-radius: 3px;
+    z-index: 100;
+    pointer-events: none;
+  }
+
+  /* Sidebar (settings panel) */
+  .sidebar {
+    background: var(--bg-sidebar);
+    width: 280px;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border);
+    min-height: 0;
+  }
+  .sidebar.collapsed { display: none; }
+  .sidebar-header {
+    padding: 8px 16px 6px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--fg-muted);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .sidebar-header .dots {
+    color: var(--fg-muted);
+    cursor: pointer;
+    padding: 2px 4px;
+  }
+  .sidebar-header .dots:hover { color: var(--fg-strong); }
+
+  .settings-group { border-top: 1px solid var(--border-soft); }
+  .settings-group-header {
+    display: flex;
+    align-items: center;
+    padding: 4px 8px 4px 4px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--fg);
+    cursor: pointer;
+    user-select: none;
+    gap: 4px;
+  }
+  .settings-group-header:hover { background: var(--bg-hover); }
+  .chevron {
+    width: 16px; height: 16px;
+    transition: transform .15s;
+  }
+  .settings-group.collapsed .chevron { transform: rotate(-90deg); }
+  .settings-group.collapsed .settings-body { display: none; }
+  .settings-body {
+    padding: 6px 16px 14px;
+  }
+  .setting {
+    margin-bottom: 12px;
+  }
+  .setting-label {
+    font-size: 12px;
+    color: var(--fg);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .setting-desc {
+    font-size: 11px;
+    color: var(--fg-muted);
+    margin-bottom: 6px;
+    line-height: 1.45;
+  }
+  .setting select,
+  .setting input[type="text"] {
+    width: 100%;
+    background: var(--bg-input);
+    color: var(--fg);
+    border: 1px solid transparent;
+    border-radius: 2px;
+    padding: 4px 6px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    outline: none;
+    transition: border-color .1s;
+  }
+  .setting select:focus,
+  .setting input[type="text"]:focus {
+    border-color: var(--accent-focus);
+  }
+  .setting select:hover,
+  .setting input[type="text"]:hover {
+    background: #45494e;
+  }
+
+  /* Radio group */
+  .radio-group { display: flex; flex-direction: column; gap: 4px; }
+  .radio-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 3px 4px;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 12px;
+    font-family: var(--font-mono);
+  }
+  .radio-row:hover { background: var(--bg-hover); }
+  .radio-row input { accent-color: var(--accent); margin: 0; }
+  .radio-row code {
+    color: var(--fg-muted);
+    font-size: 11px;
+    margin-left: auto;
+  }
+
+  /* Toggle */
+  .toggle-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px;
+    padding: 4px 0;
+  }
+  .toggle {
+    position: relative;
+    width: 28px; height: 16px;
+    background: #5a5a5a;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background .15s;
+    flex-shrink: 0;
+  }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    left: 2px; top: 2px;
+    width: 12px; height: 12px;
+    background: #fff;
+    border-radius: 50%;
+    transition: transform .15s;
+  }
+  .toggle.on { background: var(--accent); }
+  .toggle.on::after { transform: translateX(12px); }
+
+  .ext-hint {
+    margin: 6px 0 0;
+    padding: 8px 10px;
+    background: rgba(0, 122, 204, 0.08);
+    border-left: 2px solid var(--accent);
+    font-size: 11px;
+    color: var(--fg-muted);
+    line-height: 1.5;
+  }
+  .ext-hint code {
+    color: var(--syntax-var);
+    font-family: var(--font-mono);
+  }
+
+  /* ============ Editor area ============ */
+  .editor-area {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-width: 0;
+    min-height: 0;
+    background: var(--bg-editor);
+  }
+
+  .pane {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    border-right: 1px solid var(--border);
+  }
+  .pane:last-child { border-right: none; }
+
+  .tabs {
+    display: flex;
+    background: var(--bg-tab-inactive);
+    border-bottom: 1px solid var(--border);
+    height: 35px;
+    align-items: stretch;
+    flex-shrink: 0;
+  }
+  .tab {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 12px;
+    background: var(--bg-tab-inactive);
+    border-right: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--fg-muted);
+    cursor: default;
+    position: relative;
+    font-family: var(--font-sans);
+  }
+  .tab.active {
+    background: var(--bg-tab-active);
+    color: var(--fg-strong);
+  }
+  .tab.active::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: var(--accent);
+  }
+  .tab .file-icon {
+    width: 16px; height: 16px;
+    flex-shrink: 0;
+  }
+  .tab .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--fg);
+    opacity: 0;
+    transition: opacity .15s;
+  }
+  .tab.dirty .dot { opacity: 1; }
+
+  .pane-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 8px 4px 12px;
+    background: var(--bg-editor);
+    border-bottom: 1px solid var(--border-soft);
+    flex-shrink: 0;
+    min-height: 30px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--fg-muted);
+  }
+  .breadcrumb {
+    display: flex; align-items: center; gap: 4px;
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .breadcrumb svg { width: 14px; height: 14px; }
+  .breadcrumb .sep { color: var(--fg-dim); }
+  .pane-actions { display: flex; gap: 2px; }
+  .icon-btn {
+    width: 26px; height: 26px;
+    display: flex; align-items: center; justify-content: center;
+    background: transparent;
+    border: none;
+    color: var(--fg-muted);
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background .1s, color .1s;
+  }
+  .icon-btn:hover { background: var(--bg-hover); color: var(--fg-strong); }
+  .icon-btn:active { background: var(--bg-active); }
+  .icon-btn svg { width: 16px; height: 16px; }
+
+  /* Editor: textarea + output */
+  .editor-body {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+    position: relative;
+    background: var(--bg-editor);
+  }
+  .gutter {
+    background: var(--bg-editor);
+    color: var(--fg-dim);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.55;
+    padding: 12px 10px 12px 14px;
+    text-align: right;
+    user-select: none;
+    border-right: 1px solid var(--border-soft);
+    min-width: 54px;
+    overflow: hidden;
+  }
+  .gutter div { white-space: pre; }
+
+  .textarea-wrap {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    position: relative;
+  }
+  textarea.code-input {
+    flex: 1;
+    background: transparent;
+    color: var(--fg);
+    border: none;
+    outline: none;
+    resize: none;
+    padding: 12px 16px 12px 12px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.55;
+    tab-size: 2;
+    white-space: pre;
+    overflow: auto;
+  }
+  textarea.code-input::placeholder {
+    color: var(--fg-dim);
+    font-style: italic;
+  }
+
+  /* Output: markdown-rendered, styled like an editor */
+  .output-scroll {
+    flex: 1;
+    min-width: 0;
+    overflow: auto;
+    padding: 12px 16px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.6;
+  }
+  .output-scroll.view-source {
+    white-space: pre-wrap;
+    color: var(--fg);
+  }
+  .output-scroll .date-match {
+    color: var(--syntax-date);
+  }
+  .output-scroll .weekday-added {
+    color: var(--syntax-weekday);
+    font-weight: 500;
+  }
+  /* Markdown styles */
+  .md :is(h1,h2,h3,h4,h5,h6) {
+    font-family: var(--font-sans);
+    color: var(--fg-strong);
+    margin: 0.8em 0 0.4em;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+  .md h1 { font-size: 20px; border-bottom: 1px solid var(--border-soft); padding-bottom: 6px; }
+  .md h2 { font-size: 17px; border-bottom: 1px solid var(--border-soft); padding-bottom: 4px; }
+  .md h3 { font-size: 15px; }
+  .md h4, .md h5, .md h6 { font-size: 13px; }
+  .md p { margin: 0.5em 0; font-family: var(--font-sans); font-size: 13px; line-height: 1.6; }
+  .md ul, .md ol { margin: 0.4em 0; padding-left: 1.6em; font-family: var(--font-sans); }
+  .md li { margin: 0.2em 0; font-size: 13px; line-height: 1.6; }
+  .md li::marker { color: var(--fg-muted); }
+  .md input[type="checkbox"] { margin-right: 6px; accent-color: var(--accent); }
+  .md code {
+    background: #2d2d2d;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 12px;
+    color: var(--syntax-string);
+  }
+  .md pre {
+    background: #0d1117;
+    border: 1px solid var(--border-soft);
+    padding: 10px 12px;
+    border-radius: 4px;
+    overflow: auto;
+    margin: 0.6em 0;
+  }
+  .md pre code { background: transparent; padding: 0; color: var(--fg); font-size: 12px; }
+  .md blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 2px 12px;
+    margin: 0.6em 0;
+    color: var(--fg-muted);
+    background: rgba(0,122,204,0.06);
+    font-family: var(--font-sans);
+  }
+  .md a { color: var(--syntax-keyword); text-decoration: none; }
+  .md a:hover { text-decoration: underline; }
+  .md hr { border: none; border-top: 1px solid var(--border-soft); margin: 1em 0; }
+  .md table { border-collapse: collapse; margin: 0.6em 0; font-family: var(--font-sans); font-size: 12px; }
+  .md th, .md td { border: 1px solid var(--border-soft); padding: 4px 10px; }
+  .md th { background: #2d2d2d; }
+  .md strong { color: var(--fg-strong); }
+  .md em { color: var(--fg); }
+  .md .weekday-added {
+    color: var(--syntax-weekday);
+    font-weight: 500;
+  }
+
+  .empty-state {
+    color: var(--fg-dim);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-style: italic;
+    padding: 8px 0;
+  }
+  .empty-state .kbd {
+    display: inline-block;
+    background: var(--bg-input);
+    border: 1px solid #5a5a5a;
+    border-radius: 3px;
+    padding: 1px 6px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-style: normal;
+    color: var(--fg);
+    margin: 0 2px;
+  }
+
+  /* Copy button (Click to Copy) — top right of output pane */
+  .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: 1px solid var(--border-soft);
+    color: var(--fg-muted);
+    padding: 3px 10px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: all .12s;
+  }
+  .copy-btn:hover {
+    color: var(--fg-strong);
+    border-color: var(--accent);
+    background: rgba(0,122,204,0.1);
+  }
+  .copy-btn:active { transform: scale(0.97); }
+  .copy-btn.copied {
+    color: #4ec9b0;
+    border-color: #4ec9b0;
+    background: rgba(78,201,176,0.1);
+  }
+  .copy-btn svg { width: 13px; height: 13px; }
+
+  .view-toggle {
+    display: inline-flex;
+    background: var(--bg-input);
+    border-radius: 3px;
+    padding: 2px;
+    border: 1px solid var(--border-soft);
+  }
+  .view-toggle button {
+    background: transparent;
+    border: none;
+    color: var(--fg-muted);
+    padding: 2px 8px;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    cursor: pointer;
+    border-radius: 2px;
+    transition: all .1s;
+  }
+  .view-toggle button.active {
+    background: var(--accent);
+    color: #fff;
+  }
+  .view-toggle button:hover:not(.active) { color: var(--fg-strong); }
+
+  /* Status bar */
+  .statusbar {
+    background: var(--bg-statusbar);
+    color: #fff;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    gap: 14px;
+    font-family: var(--font-sans);
+  }
+  .statusbar-item { display: flex; align-items: center; gap: 5px; cursor: default; padding: 0 4px; height: 100%; }
+  .statusbar-item:hover { background: rgba(255,255,255,0.12); }
+  .statusbar-item svg { width: 13px; height: 13px; }
+  .statusbar-spacer { flex: 1; }
+  .statusbar-item.transient { animation: fadeOut 2.5s forwards; }
+  @keyframes fadeOut { 0%,70% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
+
+  /* Scrollbars */
+  ::-webkit-scrollbar { width: 14px; height: 14px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: #424242; border: 3px solid transparent; background-clip: content-box; border-radius: 7px; }
+  ::-webkit-scrollbar-thumb:hover { background: #5a5a5a; background-clip: content-box; border: 3px solid transparent; }
+  ::-webkit-scrollbar-corner { background: transparent; }
+
+  /* Resizer (between input and output) */
+  .resizer {
+    width: 1px;
+    background: var(--border);
+    cursor: col-resize;
+    position: relative;
+  }
+  .resizer::after {
+    content: '';
+    position: absolute;
+    left: -3px; right: -3px;
+    top: 0; bottom: 0;
+  }
+  .resizer:hover { background: var(--accent); }
+
+  /* Command palette-style toast */
+  .toast {
+    position: fixed;
+    bottom: 40px; right: 20px;
+    background: #252526;
+    border: 1px solid var(--accent);
+    color: var(--fg);
+    padding: 10px 14px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    border-radius: 3px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+    transition: all .18s;
+    z-index: 1000;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+
+  /* Responsive collapse */
+  @media (max-width: 900px) {
+    .editor-area { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
+    .pane { border-right: none; border-bottom: 1px solid var(--border); }
+    .sidebar { width: 240px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Title bar -->
+  <div class="titlebar">
+    <div class="titlebar-traffic">
+      <span class="traffic-dot red"></span>
+      <span class="traffic-dot yellow"></span>
+      <span class="traffic-dot green"></span>
+    </div>
+    <div class="titlebar-menu">
+      <span>File</span><span>Edit</span><span>View</span><span>Help</span>
+    </div>
+    <div class="titlebar-title">
+      add-weekday <span class="meta">— input.md ⟶ output.md</span>
+    </div>
+    <div style="width: 120px;"></div>
+  </div>
+
+  <!-- Body -->
+  <div class="body">
+
+    <!-- Activity bar -->
+    <nav class="activity" aria-label="Activity Bar">
+      <button class="activity-btn active" data-tooltip="Settings" data-panel="settings" aria-label="Settings">
+        <!-- gear icon -->
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
+      </button>
+      <button class="activity-btn" data-tooltip="Calendar" aria-label="Calendar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+      </button>
+      <button class="activity-btn" data-tooltip="History" aria-label="History">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 8v5l3 2"/><circle cx="12" cy="12" r="9"/></svg>
+      </button>
+      <button class="activity-btn" data-tooltip="Extensions" aria-label="Extensions">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 7h-3V4a1 1 0 0 0-1-1h-4v4a2 2 0 1 1-4 0V3H4a1 1 0 0 0-1 1v4h3a2 2 0 1 1 0 4H3v4a1 1 0 0 0 1 1h4v-3a2 2 0 1 1 4 0v3h4a1 1 0 0 0 1-1v-4h3a2 2 0 1 0 0-4Z"/></svg>
+      </button>
+      <div class="activity-spacer"></div>
+      <button class="activity-btn" data-tooltip="Accounts" aria-label="Accounts">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
+      </button>
+    </nav>
+
+    <!-- Sidebar (Settings) -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <span>Settings</span>
+        <span class="dots" title="Views and More Actions…">⋯</span>
       </div>
 
-      <div class="controls">
-        <button id="convertBtn" type="button">曜日追加</button>
-        <button id="copyBtn" type="button">コピー</button>
+      <!-- Group: Format -->
+      <div class="settings-group" data-group="format">
+        <div class="settings-group-header">
+          <svg class="chevron" viewBox="0 0 16 16" fill="currentColor"><path d="M5 3l6 5-6 5V3z"/></svg>
+          <span>Date Format</span>
+        </div>
+        <div class="settings-body">
+          <div class="setting">
+            <div class="setting-label">曜日フォーマット</div>
+            <div class="setting-desc">日付の後に付与する曜日の表記</div>
+            <div class="radio-group" id="format-group">
+              <label class="radio-row"><input type="radio" name="fmt" value="paren-ja" checked /> <span>(月)</span> <code>4/20(月)</code></label>
+              <label class="radio-row"><input type="radio" name="fmt" value="paren-ja-full" /> <span>（月）</span> <code>4/20（月）</code></label>
+              <label class="radio-row"><input type="radio" name="fmt" value="paren-en" /> <span>(Mon)</span> <code>4/20(Mon)</code></label>
+              <label class="radio-row"><input type="radio" name="fmt" value="bracket" /> <span>[月]</span> <code>4/20[月]</code></label>
+              <label class="radio-row"><input type="radio" name="fmt" value="space" /> <span>&nbsp;月</span> <code>4/20 月</code></label>
+            </div>
+          </div>
+        </div>
       </div>
 
-      <p id="status" aria-live="polite"></p>
-      <p class="hint">※ すでに曜日付きの日付は上書きしません。</p>
+      <!-- Group: Year inference -->
+      <div class="settings-group" data-group="year">
+        <div class="settings-group-header">
+          <svg class="chevron" viewBox="0 0 16 16" fill="currentColor"><path d="M5 3l6 5-6 5V3z"/></svg>
+          <span>Year Inference</span>
+        </div>
+        <div class="settings-body">
+          <div class="setting">
+            <div class="setting-label">過去日付の年度判定</div>
+            <div class="setting-desc">年が省略され、その日付が既に過ぎている場合の扱い</div>
+            <div class="radio-group" id="year-group">
+              <label class="radio-row"><input type="radio" name="yr" value="current" checked /> <span>今年 (current)</span></label>
+              <label class="radio-row"><input type="radio" name="yr" value="next" /> <span>来年 (next)</span></label>
+              <label class="radio-row"><input type="radio" name="yr" value="nearest" /> <span>最も近い年</span></label>
+            </div>
+          </div>
+          <div class="setting">
+            <div class="setting-label">基準日 (Reference Date)</div>
+            <input type="text" id="ref-date" value="2026-04-21" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Group: Behavior -->
+      <div class="settings-group" data-group="behavior">
+        <div class="settings-group-header">
+          <svg class="chevron" viewBox="0 0 16 16" fill="currentColor"><path d="M5 3l6 5-6 5V3z"/></svg>
+          <span>Behavior</span>
+        </div>
+        <div class="settings-body">
+          <div class="setting">
+            <div class="toggle-row">
+              <div>
+                <div class="setting-label">自動変換 (Auto)</div>
+                <div class="setting-desc">入力と同時に変換する</div>
+              </div>
+              <div class="toggle on" id="toggle-auto" data-key="auto"></div>
+            </div>
+          </div>
+          <div class="setting">
+            <div class="toggle-row">
+              <div>
+                <div class="setting-label">既存曜日の上書き</div>
+                <div class="setting-desc">既に曜日付きの日付も再計算する</div>
+              </div>
+              <div class="toggle" id="toggle-overwrite" data-key="overwrite"></div>
+            </div>
+          </div>
+          <div class="setting">
+            <div class="toggle-row">
+              <div>
+                <div class="setting-label">mm/dd のみ対応</div>
+                <div class="setting-desc">yyyy/mm/dd はスキップする</div>
+              </div>
+              <div class="toggle" id="toggle-mdonly" data-key="mdOnly"></div>
+            </div>
+          </div>
+          <div class="setting">
+            <div class="toggle-row">
+              <div>
+                <div class="setting-label">土日を強調</div>
+                <div class="setting-desc">変換後に土日を色で区別する</div>
+              </div>
+              <div class="toggle on" id="toggle-highlight" data-key="highlight"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Group: Future / Extensibility -->
+      <div class="settings-group collapsed" data-group="future">
+        <div class="settings-group-header">
+          <svg class="chevron" viewBox="0 0 16 16" fill="currentColor"><path d="M5 3l6 5-6 5V3z"/></svg>
+          <span>Experimental</span>
+        </div>
+        <div class="settings-body">
+          <p class="ext-hint">
+            拡張予定: <code>4月20日</code> 日本語形式 / <code>Apr 20</code> 英語形式 / 祝日付与 / CLI連携
+          </p>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- Editor area: input pane + output pane -->
+    <main class="editor-area">
+
+      <!-- Input pane -->
+      <section class="pane">
+        <div class="tabs">
+          <div class="tab active dirty" id="input-tab">
+            <svg class="file-icon" viewBox="0 0 16 16" fill="none">
+              <path d="M3 1h7l3 3v11H3z" stroke="#519aba" stroke-width="1.2"/>
+              <path d="M10 1v3h3" stroke="#519aba" stroke-width="1.2"/>
+              <text x="4.5" y="12" font-family="monospace" font-size="4.5" fill="#519aba" font-weight="bold">MD</text>
+            </svg>
+            <span>input.md</span>
+            <span class="dot"></span>
+          </div>
+        </div>
+        <div class="pane-toolbar">
+          <div class="breadcrumb">
+            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M3 1h7l3 3v11H3z" opacity=".7"/></svg>
+            <span>add-weekday</span>
+            <span class="sep">›</span>
+            <span>input.md</span>
+          </div>
+          <div class="pane-actions">
+            <button class="icon-btn" id="btn-clear" title="Clear input">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6M5 6l1 14a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2l1-14"/></svg>
+            </button>
+            <button class="icon-btn" id="btn-sample" title="Load sample">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M9 13h6M9 17h6M9 9h1"/></svg>
+            </button>
+            <button class="icon-btn" id="btn-run" title="Run conversion (⌘↵)">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="editor-body">
+          <div class="gutter" id="gutter"><div>1</div></div>
+          <div class="textarea-wrap">
+            <textarea class="code-input" id="input" spellcheck="false" placeholder="# 週次レポート
+
+- キックオフ: 4/22
+- レビュー会: 2026/5/1
+- 締切: 12/31
+
+…など、マークダウンに日付を書くと自動で曜日を付与します。"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <!-- Output pane -->
+      <section class="pane">
+        <div class="tabs">
+          <div class="tab active" id="output-tab">
+            <svg class="file-icon" viewBox="0 0 16 16" fill="none">
+              <path d="M3 1h7l3 3v11H3z" stroke="#4ec9b0" stroke-width="1.2"/>
+              <path d="M10 1v3h3" stroke="#4ec9b0" stroke-width="1.2"/>
+              <text x="4.5" y="12" font-family="monospace" font-size="4.5" fill="#4ec9b0" font-weight="bold">MD</text>
+            </svg>
+            <span>output.md</span>
+            <span class="dot"></span>
+          </div>
+        </div>
+        <div class="pane-toolbar">
+          <div class="breadcrumb">
+            <svg viewBox="0 0 16 16" fill="currentColor"><path d="M3 1h7l3 3v11H3z" opacity=".7"/></svg>
+            <span>add-weekday</span>
+            <span class="sep">›</span>
+            <span>output.md</span>
+            <span class="sep">·</span>
+            <span id="match-count" style="color: var(--syntax-date)">0 matches</span>
+          </div>
+          <div class="pane-actions">
+            <div class="view-toggle" role="tablist" aria-label="View mode">
+              <button class="active" data-view="preview">Preview</button>
+              <button data-view="source">Source</button>
+            </div>
+            <button class="copy-btn" id="btn-copy" title="Copy output">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              <span class="copy-label">Click to Copy</span>
+            </button>
+          </div>
+        </div>
+        <div class="editor-body">
+          <div class="output-scroll md" id="output">
+            <div class="empty-state">
+              // output will appear here<br/>
+              // 左のエディタに日付を含む文章を入力すると、<br/>
+              // 自動的に曜日が付与されます。
+            </div>
+          </div>
+        </div>
+      </section>
+
     </main>
+  </div>
 
-    <script type="module">
-      import { addWeekday } from "https://esm.sh/add-weekday";
+  <!-- Status bar -->
+  <div class="statusbar">
+    <div class="statusbar-item" title="Branch">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="6" r="2"/><path d="M6 8v8M18 8c0 4-4 4-6 6"/></svg>
+      main
+    </div>
+    <div class="statusbar-item" id="sb-matches">⟐ 0 dates detected</div>
+    <div class="statusbar-item" id="sb-format">Ln 1, Col 1</div>
+    <div class="statusbar-spacer"></div>
+    <div class="statusbar-item" id="sb-ref">Ref 2026-04-21 (火)</div>
+    <div class="statusbar-item">UTF-8</div>
+    <div class="statusbar-item">Markdown</div>
+    <div class="statusbar-item">add-weekday v0.2.0</div>
+  </div>
+</div>
 
-      const inputEl = document.getElementById("input");
-      const outputEl = document.getElementById("output");
-      const convertBtn = document.getElementById("convertBtn");
-      const copyBtn = document.getElementById("copyBtn");
-      const statusEl = document.getElementById("status");
+<div class="toast" id="toast">✓ Copied to clipboard</div>
 
-      const setStatus = (message) => {
-        statusEl.textContent = message;
-      };
+<script>
+/* ========================================================
+   addWeekday core — forked from upstream, with extensions
+   ======================================================== */
+const WEEKDAYS_JA = ["日", "月", "火", "水", "木", "金", "土"];
+const WEEKDAYS_EN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-      convertBtn.addEventListener("click", () => {
-        const source = inputEl.value;
-        const converted = addWeekday(source);
-        outputEl.value = converted;
-        setStatus("曜日を追加しました。");
-      });
+function formatWeekday(dayIndex, fmt) {
+  const ja = WEEKDAYS_JA[dayIndex];
+  const en = WEEKDAYS_EN[dayIndex];
+  switch (fmt) {
+    case "paren-ja":      return `(${ja})`;
+    case "paren-ja-full": return `（${ja}）`;
+    case "paren-en":      return `(${en})`;
+    case "bracket":       return `[${ja}]`;
+    case "space":         return ` ${ja}`;
+    default:              return `(${ja})`;
+  }
+}
 
-      copyBtn.addEventListener("click", async () => {
-        try {
-          await navigator.clipboard.writeText(outputEl.value);
-          setStatus("追加後テキストをコピーしました。");
-        } catch {
-          setStatus("コピーに失敗しました。ブラウザ権限を確認してください。");
-        }
-      });
-    </script>
-  </body>
+function weekdayRegexFor(fmt) {
+  // returns a regex that detects "already tagged" weekday after a date match
+  // Must match leading whitespace handling too
+  switch (fmt) {
+    case "paren-ja":      return /^\s*\([日月火水木金土]\)/;
+    case "paren-ja-full": return /^\s*（[日月火水木金土]）/;
+    case "paren-en":      return /^\s*\((Sun|Mon|Tue|Wed|Thu|Fri|Sat)\)/;
+    case "bracket":       return /^\s*\[[日月火水木金土]\]/;
+    case "space":         return /^\s[日月火水木金土](\s|$|[^\w])/;
+    default:              return /^\s*[\(（][日月火水木金土][\)）]/;
+  }
+}
+// universal detector for any existing weekday tag
+const ANY_WEEKDAY_RE = /^\s*(?:[\(\[（][日月火水木金土](?:曜日?)?[\)\]）]|\((Sun|Mon|Tue|Wed|Thu|Fri|Sat)\)|\s[日月火水木金土])/;
+
+function addWeekday(text, opts = {}) {
+  const {
+    format = "paren-ja",
+    yearMode = "current",   // current | next | nearest
+    refDate = new Date(),
+    overwrite = false,
+    mdOnly = false,         // only tag mm/dd, skip yyyy/mm/dd
+  } = opts;
+
+  const refYear = refDate.getFullYear();
+  const regex = /\b(?:(\d{4})\/)?(\d{1,2})\/(\d{1,2})\b/g;
+  let matches = 0;
+
+  const result = text.replace(regex, (match, year, month, day, offset, fullText) => {
+    const after = fullText.slice(offset + match.length);
+
+    // mdOnly: skip full yyyy/mm/dd
+    if (mdOnly && year) return match;
+
+    // if already tagged and overwrite = false, skip
+    if (!overwrite && ANY_WEEKDAY_RE.test(after)) return match;
+
+    let y;
+    const m = Number(month);
+    const d = Number(day);
+    if (year) {
+      y = Number(year);
+    } else {
+      // year inference
+      const thisYearDate = new Date(refYear, m - 1, d);
+      const nextYearDate = new Date(refYear + 1, m - 1, d);
+      const prevYearDate = new Date(refYear - 1, m - 1, d);
+      if (yearMode === "next") {
+        y = (thisYearDate >= refDate) ? refYear : refYear + 1;
+      } else if (yearMode === "nearest") {
+        const diffs = [
+          [Math.abs(thisYearDate - refDate), refYear],
+          [Math.abs(nextYearDate - refDate), refYear + 1],
+          [Math.abs(prevYearDate - refDate), refYear - 1],
+        ].sort((a,b)=>a[0]-b[0]);
+        y = diffs[0][1];
+      } else {
+        y = refYear;
+      }
+    }
+
+    const date = new Date(y, m - 1, d);
+    if (date.getFullYear() !== y || date.getMonth() !== m - 1 || date.getDate() !== d) {
+      return match;
+    }
+
+    matches++;
+    // if overwriting, strip existing tag from `after` (but we return only match + new tag here;
+    // consumers of overwrite mode just get re-tagged; existing tag in source remains until we strip below)
+    const weekday = formatWeekday(date.getDay(), format);
+    return `${match}${weekday}`;
+  });
+
+  return { text: result, count: matches };
+}
+
+/* ========================================================
+   UI wiring
+   ======================================================== */
+const $ = (s) => document.querySelector(s);
+const inputEl = $('#input');
+const outputEl = $('#output');
+const gutterEl = $('#gutter');
+const matchCountEl = $('#match-count');
+const sbMatches = $('#sb-matches');
+const sbFormat = $('#sb-format');
+const sbRef = $('#sb-ref');
+const refDateEl = $('#ref-date');
+const copyBtn = $('#btn-copy');
+const toast = $('#toast');
+
+const settings = {
+  format: 'paren-ja',
+  yearMode: 'current',
+  auto: true,
+  overwrite: false,
+  mdOnly: false,
+  highlight: true,
+  refDate: '2026-04-21',
+};
+
+// --- settings group collapse ---
+document.querySelectorAll('.settings-group-header').forEach(h => {
+  h.addEventListener('click', () => h.parentElement.classList.toggle('collapsed'));
+});
+
+// --- radio groups ---
+document.querySelectorAll('#format-group input').forEach(r => {
+  r.addEventListener('change', () => { settings.format = r.value; run(); });
+});
+document.querySelectorAll('#year-group input').forEach(r => {
+  r.addEventListener('change', () => { settings.yearMode = r.value; run(); });
+});
+
+// --- toggles ---
+document.querySelectorAll('.toggle').forEach(t => {
+  t.addEventListener('click', () => {
+    t.classList.toggle('on');
+    const k = t.dataset.key;
+    settings[k] = t.classList.contains('on');
+    if (k === 'auto') { /* no-op */ }
+    run();
+  });
+});
+
+// --- ref date ---
+refDateEl.addEventListener('input', () => {
+  settings.refDate = refDateEl.value;
+  const d = parseDate(settings.refDate);
+  if (d) sbRef.textContent = `Ref ${settings.refDate} (${WEEKDAYS_JA[d.getDay()]})`;
+  run();
+});
+
+function parseDate(s) {
+  const m = /^(\d{4})-(\d{1,2})-(\d{1,2})$/.exec(s.trim());
+  if (!m) return null;
+  const d = new Date(+m[1], +m[2] - 1, +m[3]);
+  if (d.getFullYear() !== +m[1]) return null;
+  return d;
+}
+
+// --- activity bar toggle sidebar ---
+const activityButtons = document.querySelectorAll('.activity-btn[data-panel], .activity-btn[data-tooltip]');
+document.querySelectorAll('.activity-btn').forEach(b => {
+  b.addEventListener('click', () => {
+    if (b.classList.contains('active')) {
+      b.classList.remove('active');
+      $('#sidebar').classList.add('collapsed');
+    } else {
+      document.querySelectorAll('.activity-btn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      $('#sidebar').classList.remove('collapsed');
+    }
+  });
+});
+
+// --- view toggle ---
+let viewMode = 'preview';
+document.querySelectorAll('.view-toggle button').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.view-toggle button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    viewMode = b.dataset.view;
+    renderOutput();
+  });
+});
+
+// --- clear / sample / run ---
+$('#btn-clear').addEventListener('click', () => { inputEl.value = ''; run(); inputEl.focus(); });
+$('#btn-sample').addEventListener('click', () => {
+  inputEl.value = SAMPLE_TEXT;
+  run();
+});
+$('#btn-run').addEventListener('click', () => { run(true); });
+
+// --- input event ---
+inputEl.addEventListener('input', () => {
+  updateGutter();
+  updateCursor();
+  if (settings.auto) run();
+});
+inputEl.addEventListener('click', updateCursor);
+inputEl.addEventListener('keyup', updateCursor);
+inputEl.addEventListener('scroll', () => {
+  gutterEl.scrollTop = inputEl.scrollTop;
+});
+
+function updateGutter() {
+  const lines = Math.max(1, inputEl.value.split('\n').length);
+  let g = '';
+  for (let i = 1; i <= lines; i++) g += `<div>${i}</div>`;
+  gutterEl.innerHTML = g;
+}
+
+function updateCursor() {
+  const pos = inputEl.selectionStart;
+  const before = inputEl.value.slice(0, pos);
+  const line = before.split('\n').length;
+  const col = pos - before.lastIndexOf('\n');
+  sbFormat.textContent = `Ln ${line}, Col ${col}`;
+}
+
+// --- convert & render ---
+let lastOutput = '';
+let lastCount = 0;
+
+function run(showHint=false) {
+  const refDate = parseDate(settings.refDate) || new Date();
+  const { text, count } = addWeekday(inputEl.value, {
+    format: settings.format,
+    yearMode: settings.yearMode,
+    refDate,
+    overwrite: settings.overwrite,
+    mdOnly: settings.mdOnly,
+  });
+  lastOutput = text;
+  lastCount = count;
+  matchCountEl.textContent = `${count} match${count === 1 ? '' : 'es'}`;
+  sbMatches.textContent = `⟐ ${count} date${count === 1 ? '' : 's'} detected`;
+  renderOutput();
+}
+
+// Highlight the added weekday tags so the user can see what changed
+function highlightAdded(text) {
+  if (!settings.highlight) return escapeHtml(text);
+  // naive: wrap any (月)(日)... just after a date pattern
+  const re = /(\b(?:\d{4}\/)?\d{1,2}\/\d{1,2}\b)((?:[\(\[（](?:[日月火水木金土]|Sun|Mon|Tue|Wed|Thu|Fri|Sat)[\)\]）])|(?: [日月火水木金土]))/g;
+  let out = '';
+  let last = 0;
+  let m;
+  while ((m = re.exec(text)) !== null) {
+    out += escapeHtml(text.slice(last, m.index));
+    out += `<span class="date-match">${escapeHtml(m[1])}</span>`;
+    out += `<span class="weekday-added">${escapeHtml(m[2])}</span>`;
+    last = m.index + m[0].length;
+  }
+  out += escapeHtml(text.slice(last));
+  return out;
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function renderOutput() {
+  if (!lastOutput.trim()) {
+    outputEl.classList.remove('view-source');
+    outputEl.classList.add('md');
+    outputEl.innerHTML = `<div class="empty-state">
+      // output will appear here<br/>
+      // 左のエディタに日付を含む文章を入力すると、<br/>
+      // 自動的に曜日が付与されます。<br/><br/>
+      // Press <span class="kbd">⌘</span>+<span class="kbd">⏎</span> to run manually
+    </div>`;
+    return;
+  }
+  if (viewMode === 'source') {
+    outputEl.classList.add('view-source');
+    outputEl.classList.remove('md');
+    outputEl.innerHTML = highlightAdded(lastOutput);
+  } else {
+    outputEl.classList.remove('view-source');
+    outputEl.classList.add('md');
+    // render markdown, then post-process to highlight weekday tags
+    let html = marked.parse(lastOutput, { breaks: true, gfm: true });
+    if (settings.highlight) {
+      html = html.replace(
+        /(\b(?:\d{4}\/)?\d{1,2}\/\d{1,2}\b)((?:[\(\[（](?:[日月火水木金土]|Sun|Mon|Tue|Wed|Thu|Fri|Sat)[\)\]）])|(?: [日月火水木金土]))/g,
+        (_, d, w) => `${d}<span class="weekday-added">${w}</span>`
+      );
+    }
+    outputEl.innerHTML = html;
+  }
+}
+
+// --- copy ---
+copyBtn.addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(lastOutput);
+    const label = copyBtn.querySelector('.copy-label');
+    copyBtn.classList.add('copied');
+    label.textContent = 'Copied!';
+    // change icon to check
+    showToast('✓ Copied ' + lastCount + ' line' + (lastCount===1?'':'s') + ' with weekdays added');
+    setTimeout(() => {
+      copyBtn.classList.remove('copied');
+      label.textContent = 'Click to Copy';
+    }, 1600);
+  } catch (e) {
+    showToast('⚠ Copy failed — clipboard permission denied');
+  }
+});
+
+function showToast(msg) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(showToast._t);
+  showToast._t = setTimeout(() => toast.classList.remove('show'), 2000);
+}
+
+// --- keyboard ---
+document.addEventListener('keydown', (e) => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { e.preventDefault(); run(true); }
+  if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key.toLowerCase() === 'c') { e.preventDefault(); copyBtn.click(); }
+});
+
+// --- sample ---
+const SAMPLE_TEXT = `# Q2 プロジェクト タイムライン
+
+> add-weekday のデモ用サンプル。日付は自動で曜日付きになります。
+
+## 🗓 マイルストーン
+
+- [x] キックオフ: **4/22**
+- [ ] 要件レビュー: 4/28
+- [ ] プロトタイプ提出: 5/8
+- [ ] ステークホルダーデモ: 5/15
+- [ ] 本番リリース: 2026/6/30
+
+## 今週の予定
+
+| 日付 | イベント | 担当 |
+|------|----------|------|
+| 4/21 | スプリント開始 | 田中 |
+| 4/23 | デザインレビュー | 佐藤 |
+| 4/25 | 1on1 | 鈴木 |
+
+## 備考
+
+- 締切日 (12/31) を忘れずに
+- 既存の日付 \`5/1(金)\` は上書きしません
+- 不正日付 (例: 2/30) はそのまま
+- 年跨ぎの確認: 1/5, 3/15 など
+
+---
+
+*Generated with* **add-weekday** *v0.2.0*
+`;
+
+// --- initial state ---
+inputEl.value = SAMPLE_TEXT;
+updateGutter();
+updateCursor();
+run();
+
+</script>
+</body>
 </html>
