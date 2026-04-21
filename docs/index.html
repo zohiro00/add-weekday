@@ -8,6 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="./addWeekday.js"></script>
 <style>
   :root {
     --bg-activity: #2a2a2a;
@@ -946,103 +947,9 @@
 
 <script>
 /* ========================================================
-   addWeekday core — forked from upstream, with extensions
+   UI wiring — core logic is loaded from ./addWeekday.js
    ======================================================== */
-const WEEKDAYS_JA = ["日", "月", "火", "水", "木", "金", "土"];
-const WEEKDAYS_EN = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-function formatWeekday(dayIndex, fmt) {
-  const ja = WEEKDAYS_JA[dayIndex];
-  const en = WEEKDAYS_EN[dayIndex];
-  switch (fmt) {
-    case "paren-ja":      return `(${ja})`;
-    case "paren-ja-full": return `（${ja}）`;
-    case "paren-en":      return `(${en})`;
-    case "bracket":       return `[${ja}]`;
-    case "space":         return ` ${ja}`;
-    default:              return `(${ja})`;
-  }
-}
-
-function weekdayRegexFor(fmt) {
-  // returns a regex that detects "already tagged" weekday after a date match
-  // Must match leading whitespace handling too
-  switch (fmt) {
-    case "paren-ja":      return /^\s*\([日月火水木金土]\)/;
-    case "paren-ja-full": return /^\s*（[日月火水木金土]）/;
-    case "paren-en":      return /^\s*\((Sun|Mon|Tue|Wed|Thu|Fri|Sat)\)/;
-    case "bracket":       return /^\s*\[[日月火水木金土]\]/;
-    case "space":         return /^\s[日月火水木金土](\s|$|[^\w])/;
-    default:              return /^\s*[\(（][日月火水木金土][\)）]/;
-  }
-}
-// universal detector for any existing weekday tag
-const ANY_WEEKDAY_RE = /^\s*(?:[\(\[（][日月火水木金土](?:曜日?)?[\)\]）]|\((Sun|Mon|Tue|Wed|Thu|Fri|Sat)\)|\s[日月火水木金土])/;
-
-function addWeekday(text, opts = {}) {
-  const {
-    format = "paren-ja",
-    yearMode = "current",   // current | next | nearest
-    refDate = new Date(),
-    overwrite = false,
-    mdOnly = false,         // only tag mm/dd, skip yyyy/mm/dd
-  } = opts;
-
-  const refYear = refDate.getFullYear();
-  const regex = /\b(?:(\d{4})\/)?(\d{1,2})\/(\d{1,2})\b/g;
-  let matches = 0;
-
-  const result = text.replace(regex, (match, year, month, day, offset, fullText) => {
-    const after = fullText.slice(offset + match.length);
-
-    // mdOnly: skip full yyyy/mm/dd
-    if (mdOnly && year) return match;
-
-    // if already tagged and overwrite = false, skip
-    if (!overwrite && ANY_WEEKDAY_RE.test(after)) return match;
-
-    let y;
-    const m = Number(month);
-    const d = Number(day);
-    if (year) {
-      y = Number(year);
-    } else {
-      // year inference
-      const thisYearDate = new Date(refYear, m - 1, d);
-      const nextYearDate = new Date(refYear + 1, m - 1, d);
-      const prevYearDate = new Date(refYear - 1, m - 1, d);
-      if (yearMode === "next") {
-        y = (thisYearDate >= refDate) ? refYear : refYear + 1;
-      } else if (yearMode === "nearest") {
-        const diffs = [
-          [Math.abs(thisYearDate - refDate), refYear],
-          [Math.abs(nextYearDate - refDate), refYear + 1],
-          [Math.abs(prevYearDate - refDate), refYear - 1],
-        ].sort((a,b)=>a[0]-b[0]);
-        y = diffs[0][1];
-      } else {
-        y = refYear;
-      }
-    }
-
-    const date = new Date(y, m - 1, d);
-    if (date.getFullYear() !== y || date.getMonth() !== m - 1 || date.getDate() !== d) {
-      return match;
-    }
-
-    matches++;
-    // if overwriting, strip existing tag from `after` (but we return only match + new tag here;
-    // consumers of overwrite mode just get re-tagged; existing tag in source remains until we strip below)
-    const weekday = formatWeekday(date.getDay(), format);
-    return `${match}${weekday}`;
-  });
-
-  return { text: result, count: matches };
-}
-
-/* ========================================================
-   UI wiring
-   ======================================================== */
+const { addWeekday, WEEKDAYS_JA } = addWeekdayLib;
 const $ = (s) => document.querySelector(s);
 const inputEl = $('#input');
 const outputEl = $('#output');
