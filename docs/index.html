@@ -3,29 +3,29 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>add-weekday — 日付に曜日追加</title>
+<title>add-weekday — 日付に曜日追加 </title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <style>
   :root {
-    /* VS Code Dark+ palette */
-    --bg-activity: #333333;
+    --bg-activity: #2a2a2a;
     --bg-sidebar: #252526;
     --bg-editor: #1e1e1e;
     --bg-panel: #1e1e1e;
-    --bg-statusbar: #007ACC;
-    --bg-titlebar: #3c3c3c;
+    --bg-statusbar: #1a1a1a;
+    --bg-titlebar: #009e60;
     --bg-input: #3c3c3c;
     --bg-hover: #2a2d2e;
     --bg-active: #37373d;
     --bg-tab-active: #1e1e1e;
     --bg-tab-inactive: #2d2d2d;
 
-    --border: #1e1e1e;
+    --border: #2e2e2e;
     --border-soft: #2b2b2b;
     --border-input: #3c3c3c;
+    --border-pane: #3e3e3e;
 
     --fg: #cccccc;
     --fg-muted: #858585;
@@ -35,6 +35,10 @@
     --accent: #007ACC;
     --accent-hover: #1a8cd8;
     --accent-focus: #0098ff;
+
+    --fm-green: #009e60;
+    --fm-green-hover: #00b36b;
+    --fm-green-dark: #007a4a;
 
     --syntax-keyword: #569cd6;
     --syntax-string: #ce9178;
@@ -69,49 +73,58 @@
   /* Title bar */
   .titlebar {
     background: var(--bg-titlebar);
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid rgba(0,0,0,0.25);
     display: flex;
     align-items: center;
-    padding: 0 12px;
+    padding: 0 14px;
     font-size: 12px;
-    color: var(--fg-muted);
+    color: rgba(255,255,255,0.9);
     user-select: none;
     gap: 16px;
   }
-  .titlebar-traffic {
+  .titlebar-brand {
     display: flex;
+    align-items: center;
     gap: 8px;
+    font-weight: 700;
+    font-size: 13px;
+    color: #fff;
+    letter-spacing: 0.01em;
   }
-  .traffic-dot {
-    width: 12px; height: 12px; border-radius: 50%;
-    background: #5a5a5a;
+  .titlebar-brand .brand-icon {
+    width: 18px; height: 18px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+    font-weight: 800;
+    color: #fff;
+    font-family: var(--font-mono);
   }
-  .traffic-dot.red { background: #ff5f56; }
-  .traffic-dot.yellow { background: #ffbd2e; }
-  .traffic-dot.green { background: #27c93f; }
   .titlebar-title {
     flex: 1;
     text-align: center;
     font-family: var(--font-sans);
     font-size: 12px;
+    color: rgba(255,255,255,0.75);
   }
   .titlebar-title .meta {
-    color: var(--fg-dim);
+    color: rgba(255,255,255,0.5);
     margin-left: 8px;
   }
   .titlebar-menu {
     display: flex;
-    gap: 14px;
-    color: var(--fg);
+    gap: 2px;
+    color: rgba(255,255,255,0.85);
     font-size: 12px;
   }
-  .titlebar-menu span { cursor: default; padding: 2px 6px; border-radius: 3px; }
-  .titlebar-menu span:hover { background: rgba(255,255,255,0.08); }
+  .titlebar-menu span { cursor: default; padding: 2px 8px; border-radius: 3px; }
+  .titlebar-menu span:hover { background: rgba(0,0,0,0.18); }
 
   /* Main body */
   .body {
     display: grid;
-    grid-template-columns: 48px auto 1fr;
+    grid-template-columns: 44px auto 1fr;
     min-height: 0;
     overflow: hidden;
   }
@@ -126,7 +139,7 @@
     border-right: 1px solid var(--border);
   }
   .activity-btn {
-    width: 48px; height: 48px;
+    width: 44px; height: 44px;
     display: flex; align-items: center; justify-content: center;
     color: var(--fg-muted);
     cursor: pointer;
@@ -327,7 +340,7 @@
     flex-direction: column;
     min-width: 0;
     min-height: 0;
-    border-right: 1px solid var(--border);
+    border-right: 2px solid var(--border-pane);
   }
   .pane:last-child { border-right: none; }
 
@@ -556,31 +569,34 @@
     margin: 0 2px;
   }
 
-  /* Copy button (Click to Copy) — top right of output pane */
+  /* Copy button (Click to Copy) — prominent CTA */
   .copy-btn {
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    background: transparent;
-    border: 1px solid var(--border-soft);
-    color: var(--fg-muted);
-    padding: 3px 10px;
+    background: var(--fm-green);
+    border: none;
+    color: #fff;
+    padding: 5px 14px;
     font-family: var(--font-mono);
-    font-size: 11px;
-    border-radius: 3px;
+    font-size: 12px;
+    font-weight: 600;
+    border-radius: 4px;
     cursor: pointer;
-    transition: all .12s;
+    transition: all .15s;
+    letter-spacing: 0.02em;
+    box-shadow: 0 1px 4px rgba(0,158,96,0.25);
   }
   .copy-btn:hover {
-    color: var(--fg-strong);
-    border-color: var(--accent);
-    background: rgba(0,122,204,0.1);
+    background: var(--fm-green-hover);
+    box-shadow: 0 3px 10px rgba(0,158,96,0.4);
+    transform: translateY(-1px);
   }
-  .copy-btn:active { transform: scale(0.97); }
+  .copy-btn:active { transform: scale(0.97); box-shadow: none; }
   .copy-btn.copied {
-    color: #4ec9b0;
-    border-color: #4ec9b0;
-    background: rgba(78,201,176,0.1);
+    background: var(--fm-green-dark);
+    color: #fff;
+    box-shadow: none;
   }
   .copy-btn svg { width: 13px; height: 13px; }
 
@@ -611,17 +627,18 @@
   /* Status bar */
   .statusbar {
     background: var(--bg-statusbar);
-    color: #fff;
-    font-size: 12px;
+    color: var(--fg-muted);
+    font-size: 11px;
     display: flex;
     align-items: center;
     padding: 0 10px;
     gap: 14px;
     font-family: var(--font-sans);
+    border-top: 1px solid #2a2a2a;
   }
   .statusbar-item { display: flex; align-items: center; gap: 5px; cursor: default; padding: 0 4px; height: 100%; }
-  .statusbar-item:hover { background: rgba(255,255,255,0.12); }
-  .statusbar-item svg { width: 13px; height: 13px; }
+  .statusbar-item:hover { background: rgba(255,255,255,0.06); color: var(--fg); }
+  .statusbar-item svg { width: 13px; height: 13px; opacity: 0.6; }
   .statusbar-spacer { flex: 1; }
   .statusbar-item.transient { animation: fadeOut 2.5s forwards; }
   @keyframes fadeOut { 0%,70% { opacity: 1; } 100% { opacity: 0; visibility: hidden; } }
@@ -681,18 +698,16 @@
 
   <!-- Title bar -->
   <div class="titlebar">
-    <div class="titlebar-traffic">
-      <span class="traffic-dot red"></span>
-      <span class="traffic-dot yellow"></span>
-      <span class="traffic-dot green"></span>
-    </div>
-    <div class="titlebar-menu">
-      <span>File</span><span>Edit</span><span>View</span><span>Help</span>
+    <div class="titlebar-brand">
+      <span class="brand-icon">+曜</span>
+      add-weekday
     </div>
     <div class="titlebar-title">
-      add-weekday <span class="meta">— input.md ⟶ output.md</span>
+      <span class="meta">日付に曜日を自動追加: 4/20 to 4/20(月)</span>
     </div>
-    <div style="width: 120px;"></div>
+    <div class="titlebar-menu">
+      <span>Help</span>
+    </div>
   </div>
 
   <!-- Body -->
@@ -701,21 +716,7 @@
     <!-- Activity bar -->
     <nav class="activity" aria-label="Activity Bar">
       <button class="activity-btn active" data-tooltip="Settings" data-panel="settings" aria-label="Settings">
-        <!-- gear icon -->
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"/></svg>
-      </button>
-      <button class="activity-btn" data-tooltip="Calendar" aria-label="Calendar">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
-      </button>
-      <button class="activity-btn" data-tooltip="History" aria-label="History">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 8v5l3 2"/><circle cx="12" cy="12" r="9"/></svg>
-      </button>
-      <button class="activity-btn" data-tooltip="Extensions" aria-label="Extensions">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M20 7h-3V4a1 1 0 0 0-1-1h-4v4a2 2 0 1 1-4 0V3H4a1 1 0 0 0-1 1v4h3a2 2 0 1 1 0 4H3v4a1 1 0 0 0 1 1h4v-3a2 2 0 1 1 4 0v3h4a1 1 0 0 0 1-1v-4h3a2 2 0 1 0 0-4Z"/></svg>
-      </button>
-      <div class="activity-spacer"></div>
-      <button class="activity-btn" data-tooltip="Accounts" aria-label="Accounts">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>
       </button>
     </nav>
 
@@ -904,8 +905,8 @@
           </div>
           <div class="pane-actions">
             <div class="view-toggle" role="tablist" aria-label="View mode">
-              <button class="active" data-view="preview">Preview</button>
-              <button data-view="source">Source</button>
+              <button class="active" data-view="source">Source</button>
+              <button data-view="preview">Preview</button>
             </div>
             <button class="copy-btn" id="btn-copy" title="Copy output">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
@@ -937,8 +938,6 @@
     <div class="statusbar-item" id="sb-format">Ln 1, Col 1</div>
     <div class="statusbar-spacer"></div>
     <div class="statusbar-item" id="sb-ref">Ref 2026-04-21 (火)</div>
-    <div class="statusbar-item">UTF-8</div>
-    <div class="statusbar-item">Markdown</div>
     <div class="statusbar-item">add-weekday v0.2.0</div>
   </div>
 </div>
@@ -1122,7 +1121,7 @@ document.querySelectorAll('.activity-btn').forEach(b => {
 });
 
 // --- view toggle ---
-let viewMode = 'preview';
+let viewMode = 'source';
 document.querySelectorAll('.view-toggle button').forEach(b => {
   b.addEventListener('click', () => {
     document.querySelectorAll('.view-toggle button').forEach(x => x.classList.remove('active'));
