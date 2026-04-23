@@ -8,7 +8,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-<script src="./addWeekday.js"></script>
+<script src="/addWeekday.js"></script>
 <style>
   :root {
     --bg-activity: #2a2a2a;
@@ -112,6 +112,22 @@
   .titlebar-title .meta {
     color: rgba(255,255,255,0.5);
     margin-left: 8px;
+  }
+  .titlebar-nav {
+    display: flex;
+    align-items: center;
+  }
+  .titlebar-nav a {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    font-size: 12px;
+    padding: 3px 8px;
+    border-radius: 3px;
+    transition: background .1s, color .1s;
+  }
+  .titlebar-nav a:hover {
+    background: rgba(0,0,0,0.2);
+    color: #fff;
   }
   .titlebar-menu {
     display: flex;
@@ -706,8 +722,8 @@
     <div class="titlebar-title">
       <span class="meta">日付に曜日を自動追加: 4/20 to 4/20(月)</span>
     </div>
-    <div class="titlebar-menu">
-      <span>Help</span>
+    <div class="titlebar-nav">
+      <a href="/">← Top</a>
     </div>
   </div>
 
@@ -947,7 +963,7 @@
 
 <script>
 /* ========================================================
-   UI wiring — core logic is loaded from ./addWeekday.js
+   UI wiring — core logic is loaded from /addWeekday.js
    ======================================================== */
 const { addWeekday, WEEKDAYS_JA } = addWeekdayLib;
 const $ = (s) => document.querySelector(s);
