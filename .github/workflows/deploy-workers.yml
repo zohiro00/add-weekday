@@ -1,0 +1,23 @@
+# Deploy to Cloudflare Workers
+#
+# Required GitHub Secret:
+#   CLOUDFLARE_API_TOKEN — create at https://dash.cloudflare.com/profile/api-tokens
+#   Use the "Edit Cloudflare Workers" template, or grant Workers:Edit permission.
+
+name: Deploy to Cloudflare Workers
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy via Wrangler
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          workingDirectory: site
