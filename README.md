@@ -2,8 +2,7 @@
 
 ## 概要
 
-**add-weekday**
-は、自然文に含まれる日付に対して自動で曜日を付与するシンプルなツールです。\
+**add-weekday** は、自然文に含まれる日付に対して自動で曜日を付与するシンプルなツールです。
 マークダウンなどで雑に日付をメモするビジネスマン向けに設計されています。
 
 ## 入力例
@@ -25,19 +24,20 @@
 ## 仕様
 
 - 正規表現ベースで日付を検出
-- 年が省略された場合は**現在年を使用**
-- 既に曜日が付いている場合は**上書きしない**
+- 年が省略された場合は**現在年を使用**（`yearMode` オプションで変更可）
+- 既に曜日が付いている場合は**上書きしない**（`overwrite` オプションで変更可）
 - シンプルなロジックで高速動作
 
 ## 設計の特徴
 
+- ゼロ依存・UMD 形式（Node.js / ブラウザ / VSCode 拡張のいずれでも動作）
 - シンプルな正規表現ベース
-- 年は現在年固定
-- 上書き禁止
-- 英語フォーマット対応の拡張余地あり
+- 上書き禁止（デフォルト）
+- 複数の出力フォーマット: `(月)` `（月）` `(Mon)` `[月]` ` 月`
 - オプション拡張可能
-  - 過去日付は来年扱い
-  - mm/ddのみ曜日付与 など
+  - `yearMode`: `current` / `next` / `nearest`
+  - `mdOnly`: mm/dd のみ対象（yyyy/mm/dd はスキップ）
+  - `overwrite`: 既存曜日を再計算
 
 ## 想定ユースケース
 
@@ -45,35 +45,61 @@
 - タスク管理メモの補助
 - 日付の確認ミス防止
 
-## GitHub Pages サンプル
+---
 
-`docs/index.html` に、以下を備えたサンプルサイトを追加しています。
+## Web ツール (Cloudflare Workers)
 
-- 原文入力テキストエリア
-- 曜日追加ボタン
-- 追加後テキストエリア
-- コピーボタン
+`site/` に2ページ構成の静的サイトを配置しています。
 
-GitHub Pages 公開は、`.github/workflows/deploy-pages.yml` で自動化しています。
+| パス | 内容 |
+|------|------|
+| `/` | ランディングページ |
+| `/engine` | エディタ（入力→曜日付与→コピー） |
 
-### 公開手順
+### ローカルで確認
 
-1. `main` ブランチに push（または Actions を手動実行）
-2. `Deploy sample to GitHub Pages` が実行され、必要に応じて Pages 設定を自動有効化
-3. ワークフロー成功後、公開 URL が発行される
+```bash
+cd site
+npx wrangler dev
+```
 
+- `http://localhost:8787/` → トップページ
+- `http://localhost:8787/engine` → ツールページ
+- `http://localhost:8787/addWeekday.js` → UMD ライブラリ
 
-公開後のアクセス先:
+### Cloudflare Workers へデプロイ
 
-- ルート: `https://<user>.github.io/<repo>/`
-- 直接: `https://<user>.github.io/<repo>/docs/index.html`
+`.github/workflows/deploy-workers.yml` で `site/` または `src/` への push 時に自動デプロイします。
 
+**初回セットアップ:**
+
+1. [Cloudflare ダッシュボード](https://dash.cloudflare.com/profile/api-tokens) で API トークンを発行
+   - テンプレート: `Edit Cloudflare Workers` を使用
+2. GitHub リポジトリの **Settings → Secrets → Actions** に `CLOUDFLARE_API_TOKEN` を追加
+3. `main` ブランチへ push（または Actions タブから手動実行）
+
+**カスタムドメイン設定:**
+
+Cloudflare ダッシュボード → Workers & Pages → add-weekday → Custom Domains で設定。コードの変更は不要です。
+
+---
+
+## テスト
+
+```bash
+node addWeekday.test.js
+```
+
+ビルドステップ・パッケージマネージャ・リンターは不要です。
+
+---
 
 ## 今後の拡張案
-- VSCode拡張機能
+
+- VSCode 拡張機能
 - 日本語日付（例：4月20日）対応
-- CLIツール化
-- Web UI対応
+- CLI ツール化
+- 祝日付与
 
 ## ターゲットユーザー
 
