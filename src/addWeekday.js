@@ -1,3 +1,4 @@
+// 編集は src/addWeekday.js のみ。site/public/addWeekday.js はコミット時に自動同期。
 // addWeekday.js — core logic (UMD: works in Node.js and browsers)
 (function (root, factory) {
   if (typeof module !== 'undefined' && module.exports) {
