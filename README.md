@@ -98,7 +98,6 @@ node addWeekday.test.js
 
 - VSCode 拡張機能
 - 日本語日付（例：4月20日）対応
-- CLI ツール化
 - 祝日付与
 
 ## ターゲットユーザー
