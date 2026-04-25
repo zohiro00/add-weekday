@@ -21,3 +21,10 @@ There is no build step, package manager, or linter configured.
 - Branch naming: `fix/<topic>`, `feature/<topic>`, `docs/<topic>` etc.
 - Open a PR and merge via GitHub — do not push commits directly to `main`.
 
+## src/addWeekday.js と site/public/addWeekday.js の同期ルール
+
+- **`src/addWeekday.js` が唯一の編集対象**。`site/public/addWeekday.js` は直接編集禁止。
+- git commit 時に `.githooks/pre-commit` が自動でコピーする。
+- CI (`check-sync.yml`) が 2 ファイルの一致を検証する。
+- clone 後は一度だけ `bash scripts/setup-hooks.sh` を実行して hook を有効にすること。
+

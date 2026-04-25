@@ -1,3 +1,4 @@
+// 編集は src/addWeekday.js のみ。site/public/addWeekday.js はコミット時に自動同期。
 // addWeekday.js — core logic (UMD: works in Node.js and browsers)
 (function (root, factory) {
   if (typeof module !== 'undefined' && module.exports) {
@@ -23,9 +24,6 @@
     }
   }
 
-  // Detects any existing weekday tag after a date match
-  const ANY_WEEKDAY_RE = /^\s*(?:[\(\[（][日月火水木金土](?:曜日?)?[\)\]）]|\((Sun|Mon|Tue|Wed|Thu|Fri|Sat)\)|\s[日月火水木金土])/;
-
   /**
    * @param {string} text
    * @param {object} [opts]
@@ -46,14 +44,12 @@
     } = opts || {};
 
     const refYear = refDate.getFullYear();
-    const regex = /\b(?:(\d{4})\/)?(\d{1,2})\/(\d{1,2})\b/g;
+    const regex = /\b(?:(\d{4})\/)?(\d{1,2})\/(\d{1,2})\b([\(\[（][日月火水木金土](?:曜日?)?[\)\]）]|\((?:Sun|Mon|Tue|Wed|Thu|Fri|Sat)\)| [日月火水木金土])?/g;
     let matches = 0;
 
-    const result = text.replace(regex, (match, year, month, day, offset, fullText) => {
-      const after = fullText.slice(offset + match.length);
-
+    const result = text.replace(regex, (match, year, month, day, existingTag, offset, fullText) => {
       if (mdOnly && year) return match;
-      if (!overwrite && ANY_WEEKDAY_RE.test(after)) return match;
+      if (existingTag && !overwrite) return match;
 
       let y;
       const m = Number(month);
@@ -85,7 +81,8 @@
       }
 
       matches++;
-      return `${match}${formatWeekday(date.getDay(), format)}`;
+      const datePart = existingTag ? match.slice(0, match.length - existingTag.length) : match;
+      return `${datePart}${formatWeekday(date.getDay(), format)}`;
     });
 
     return { text: result, count: matches };

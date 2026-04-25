@@ -19,6 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Sync addWeekday.js to site
+        run: cp src/addWeekday.js site/public/addWeekday.js
       - name: Deploy via Wrangler
         uses: cloudflare/wrangler-action@v3
         with:

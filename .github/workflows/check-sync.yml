@@ -1,0 +1,22 @@
+name: Check src/site sync
+
+on:
+  push:
+  pull_request:
+    branches: [main]
+
+jobs:
+  check-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify addWeekday.js files are identical
+        run: |
+          if ! diff src/addWeekday.js site/public/addWeekday.js > /dev/null 2>&1; then
+            echo "❌ site/public/addWeekday.js が src/addWeekday.js と異なります。"
+            echo "   src/addWeekday.js を編集し、コミット時に自動同期されるようにしてください。"
+            echo ""
+            diff src/addWeekday.js site/public/addWeekday.js || true
+            exit 1
+          fi
+          echo "✅ src/addWeekday.js と site/public/addWeekday.js は一致しています"

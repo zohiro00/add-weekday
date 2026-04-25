@@ -1,0 +1,28 @@
+#!/bin/bash
+# Enforce src/addWeekday.js → site/public/addWeekday.js sync.
+#
+# - src を変更した場合: site/public/ に自動コピーしてステージ
+# - site/public/ を直接変更した場合: コミットをブロック
+
+SRC="src/addWeekday.js"
+SITE="site/public/addWeekday.js"
+
+staged_src=false
+staged_site=false
+
+git diff --cached --name-only | grep -q "^${SRC}$"  && staged_src=true
+git diff --cached --name-only | grep -q "^${SITE}$" && staged_site=true
+
+# src が変更された → site に自動同期
+if $staged_src; then
+  cp "$SRC" "$SITE"
+  git add "$SITE"
+  echo "✅ ${SITE} を ${SRC} から自動同期しました"
+fi
+
+# site/public/ だけが変更された → 直接編集は禁止
+if $staged_site && ! $staged_src; then
+  echo "❌ ${SITE} を直接編集することは禁止されています。" >&2
+  echo "   ${SRC} を編集してください（コミット時に自動で同期されます）。" >&2
+  exit 1
+fi
