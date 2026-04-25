@@ -105,6 +105,7 @@
     font-size: 13px;
     color: #fff;
     letter-spacing: 0.01em;
+    text-decoration: none;
   }
   .titlebar-brand .brand-icon {
     width: 18px; height: 18px;
@@ -721,6 +722,7 @@
     .editor-area { grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; }
     .pane { border-right: none; border-bottom: 1px solid var(--border); }
     .sidebar { width: 240px; }
+    .titlebar-title .meta-detail { display: none; }
   }
 </style>
 </head>
@@ -729,12 +731,12 @@
 
   <!-- Title bar -->
   <div class="titlebar">
-    <div class="titlebar-brand">
+    <a href="/" class="titlebar-brand">
       <span class="brand-icon">+曜</span>
       add-weekday
-    </div>
+    </a>
     <div class="titlebar-title">
-      <span class="meta">日付に曜日を自動追加: 4/20 to 4/20(月)</span>
+      <span class="meta">日付に曜日を自動追加<span class="meta-detail">: 4/20 to 4/20(月)</span></span>
     </div>
     <div class="titlebar-nav">
       <a href="/">← Top</a>
@@ -1249,6 +1251,13 @@ inputEl.value = SAMPLE_TEXT;
 updateGutter();
 updateCursor();
 run();
+
+// Mobile: collapse sidebar by default
+if (window.innerWidth <= 900) {
+  const sidebar = document.querySelector('#sidebar');
+  if (sidebar) sidebar.classList.add('collapsed');
+  document.querySelectorAll('.activity-btn').forEach(b => b.classList.remove('active'));
+}
 
 </script>
 </body>
