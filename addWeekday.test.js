@@ -44,8 +44,11 @@ test("yearMode next (未来日)",     "4/22", "4/22(水)", { yearMode: "next" })
 test("yearMode nearest",           "4/20", "4/20(月)", { yearMode: "nearest" });
 
 // ===== overwrite =====
-test("overwrite=false でスキップ", "4/20(月)",  "4/20(月)",   { overwrite: false });
-test("overwrite=true で再計算",    "4/20(月)",  "4/20(月)(月)", { overwrite: true });
+test("overwrite=false でスキップ",          "4/20(月)",   "4/20(月)",  { overwrite: false });
+test("overwrite=true で再計算",             "4/20(月)",   "4/20(月)",  { overwrite: true });
+test("overwrite=true で誤曜日を修正 (半角)", "4/20(日)",   "4/20(月)",  { overwrite: true });
+test("overwrite=true で誤曜日を修正 (全角)", "4/20（日）", "4/20(月)",  { overwrite: true });
+test("overwrite=true でフォーマット正規化",  "4/20（月）", "4/20(月)",  { overwrite: true });
 
 // ===== mdOnly =====
 test("mdOnly: mm/dd はタグ付け",      "4/20",          "4/20(月)",          { mdOnly: true });
