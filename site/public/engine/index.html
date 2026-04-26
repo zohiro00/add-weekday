@@ -225,6 +225,7 @@
     flex-direction: column;
     border-right: 1px solid var(--border);
     min-height: 0;
+    overflow-y: auto;
   }
   .sidebar.collapsed { display: none; }
   .sidebar-header {
@@ -1103,9 +1104,11 @@ document.querySelectorAll('#format-group input').forEach(r => {
   r.addEventListener('change', () => {
     formatCustomized = false;
     settings.format = r.value;
-    // Reflect alias template in the template input
     const alias = FORMAT_ALIASES[r.value];
-    if (alias) formatTemplateEl.value = alias.template;
+    if (alias) {
+      formatTemplateEl.value = alias.template;
+      settings.weekdayStyle = alias.weekdayStyle;
+    }
     run();
   });
 });
@@ -1226,16 +1229,42 @@ function run(showHint=false) {
 // Highlight the added weekday tags so the user can see what changed
 function highlightAdded(text) {
   if (!settings.highlight) return escapeHtml(text);
-  // naive: wrap any (月)(日)... just after a date pattern
-  const re = /(\b(?:\d{4}\/)?\d{1,2}\/\d{1,2}\b)((?:[\(\[（](?:[日月火水木金土]|Sun|Mon|Tue|Wed|Thu|Fri|Sat)[\)\]）])|(?: [日月火水木金土]))/g;
+
+  const dateRe  = '(?:\\d{4}\\/)?\\d{1,2}\\/\\d{1,2}';
+  const jaWd    = '[日月火水木金土](?:曜日?)?';
+  const enWd    = 'Sun|Mon|Tue|Wed|Thu|Fri|Sat';
+
+  // Pattern 1: date followed by weekday — 4/20(月), 4/20[Mon], 4/20 月
+  const re1 = new RegExp(
+    `(\\b${dateRe}\\b)((?:[\\(\\[（](?:${jaWd}|${enWd})[\\)\\]）])|(?: [日月火水木金土]))`,
+    'g'
+  );
+  // Pattern 2: weekday followed by date — Mon, 4/20
+  const re2 = new RegExp(`(${enWd})(, )(\\b${dateRe}\\b)`, 'g');
+
+  // Collect colored segments from both patterns
+  const segs = [];
+  let m;
+  re1.lastIndex = 0;
+  while ((m = re1.exec(text)) !== null) {
+    segs.push({ start: m.index,                  end: m.index + m[1].length,           cls: 'date-match' });
+    segs.push({ start: m.index + m[1].length,    end: m.index + m[0].length,           cls: 'weekday-added' });
+  }
+  re2.lastIndex = 0;
+  while ((m = re2.exec(text)) !== null) {
+    const sepLen = m[2].length;
+    segs.push({ start: m.index,                              end: m.index + m[1].length,           cls: 'weekday-added' });
+    segs.push({ start: m.index + m[1].length + sepLen,       end: m.index + m[0].length,           cls: 'date-match' });
+  }
+  segs.sort((a, b) => a.start - b.start);
+
   let out = '';
   let last = 0;
-  let m;
-  while ((m = re.exec(text)) !== null) {
-    out += escapeHtml(text.slice(last, m.index));
-    out += `<span class="date-match">${escapeHtml(m[1])}</span>`;
-    out += `<span class="weekday-added">${escapeHtml(m[2])}</span>`;
-    last = m.index + m[0].length;
+  for (const seg of segs) {
+    if (seg.start < last) continue;
+    out += escapeHtml(text.slice(last, seg.start));
+    out += `<span class="${seg.cls}">${escapeHtml(text.slice(seg.start, seg.end))}</span>`;
+    last = seg.end;
   }
   out += escapeHtml(text.slice(last));
   return out;
@@ -1267,9 +1296,15 @@ function renderOutput() {
     // render markdown, then post-process to highlight weekday tags
     let html = marked.parse(lastOutput, { breaks: true, gfm: true });
     if (settings.highlight) {
+      // Pattern 1: date followed by weekday — 4/20(月), 4/20[Mon]
       html = html.replace(
-        /(\b(?:\d{4}\/)?\d{1,2}\/\d{1,2}\b)((?:[\(\[（](?:[日月火水木金土]|Sun|Mon|Tue|Wed|Thu|Fri|Sat)[\)\]）])|(?: [日月火水木金土]))/g,
-        (_, d, w) => `${d}<span class="weekday-added">${w}</span>`
+        /(\b(?:\d{4}\/)?\d{1,2}\/\d{1,2}\b)((?:[\(\[（](?:[日月火水木金土](?:曜日?)?|Sun|Mon|Tue|Wed|Thu|Fri|Sat)[\)\]）])|(?: [日月火水木金土]))/g,
+        (_, d, w) => `<span class="date-match">${d}</span><span class="weekday-added">${w}</span>`
+      );
+      // Pattern 2: weekday followed by date — Mon, 4/20
+      html = html.replace(
+        /(Sun|Mon|Tue|Wed|Thu|Fri|Sat)(, )(\b(?:\d{4}\/)?\d{1,2}\/\d{1,2}\b)/g,
+        (_, w, sep, d) => `<span class="weekday-added">${w}</span>${sep}<span class="date-match">${d}</span>`
       );
     }
     outputEl.innerHTML = html;
