@@ -33,11 +33,69 @@
 - ゼロ依存・UMD 形式（Node.js / ブラウザ / VSCode 拡張のいずれでも動作）
 - シンプルな正規表現ベース
 - 上書き禁止（デフォルト）
-- 複数の出力フォーマット: `(月)` `（月）` `(Mon)` `[月]` ` 月`
+- 複数の出力フォーマット: `(月)` `（月）` `(Mon)` `[月]` ` 月` および自由なテンプレート文字列
 - オプション拡張可能
   - `yearMode`: `current` / `next` / `nearest`
   - `mdOnly`: mm/dd のみ対象（yyyy/mm/dd はスキップ）
   - `overwrite`: 既存曜日を再計算
+  - `dateOrder`: `MDY`（デフォルト）/ `DMY`（欧州式 日/月 順）
+  - `weekdayStyle`: `ja` / `ja-full` / `en-short` / `en-long`
+  - `format`: エイリアス名またはテンプレート文字列（`{date}` / `{weekday}` プレースホルダー）
+
+## API
+
+```js
+const { addWeekday } = require('./addWeekday');
+
+const { text, count } = addWeekday(inputText, options);
+```
+
+### オプション一覧
+
+| オプション | 型 | デフォルト | 説明 |
+|------------|-----|-----------|------|
+| `format` | `string` | `"paren-ja"` | 出力フォーマット（エイリアス名またはテンプレート文字列） |
+| `weekdayStyle` | `string` | エイリアス依存 | 曜日の表記スタイル |
+| `dateOrder` | `string` | `"MDY"` | 月日の並び順（`"MDY"` or `"DMY"`） |
+| `yearMode` | `string` | `"current"` | 年省略時の年度判定（`"current"` / `"next"` / `"nearest"`） |
+| `refDate` | `Date` | `new Date()` | 年度判定の基準日 |
+| `overwrite` | `boolean` | `false` | 既存の曜日タグを上書きするか |
+| `mdOnly` | `boolean` | `false` | `yyyy/mm/dd` をスキップし `mm/dd` のみ処理するか |
+
+### `format` エイリアス
+
+| エイリアス | テンプレート | デフォルト weekdayStyle | 出力例 |
+|-----------|------------|----------------------|--------|
+| `paren-ja` | `{date}({weekday})` | `ja` | `4/20(月)` |
+| `paren-ja-full` | `{date}（{weekday}）` | `ja` | `4/20（月）` |
+| `paren-en` | `{date}({weekday})` | `en-short` | `4/20(Mon)` |
+| `bracket` | `{date}[{weekday}]` | `ja` | `4/20[月]` |
+| `space` | `{date} {weekday}` | `ja` | `4/20 月` |
+
+エイリアスを使用しない場合は、`{date}` と `{weekday}` を含む任意の文字列をテンプレートとして直接指定できます。
+
+```js
+addWeekday("4/20", { format: "{weekday}, {date}", weekdayStyle: "en-short" });
+// → "Mon, 4/20"
+```
+
+### `weekdayStyle`
+
+| 値 | 言語 | 出力例 |
+|----|------|--------|
+| `ja` | 日本語（省略） | `月` |
+| `ja-full` | 日本語（完全） | `月曜日` |
+| `en-short` | 英語（省略） | `Mon` |
+| `en-long` | 英語（完全） | `Monday` |
+
+### `dateOrder`
+
+`DMY` を指定すると、年なし日付（`mm/dd` 形式）を **日/月** として解釈します（欧州式）。4 桁年付きの日付（`yyyy/mm/dd`）は `dateOrder` に関係なく常に YMD として扱います。
+
+```js
+addWeekday("20/4", { dateOrder: "DMY" });  // 4月20日 → "20/4(月)"
+addWeekday("4/20", { dateOrder: "DMY" });  // month=20 → 無効のためスキップ
+```
 
 ## 想定ユースケース
 
