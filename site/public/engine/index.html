@@ -31,6 +31,7 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <script src="/addWeekday.js"></script>
+<script src="/engine/i18n.js"></script>
 <style>
   :root {
     --bg-activity: #2a2a2a;
@@ -768,16 +769,34 @@
         <span class="dots" title="Views and More Actions…">⋯</span>
       </div>
 
+      <!-- Group: Locale / Region -->
+      <div class="settings-group" data-group="locale">
+        <div class="settings-group-header">
+          <svg class="chevron" viewBox="0 0 16 16" fill="currentColor"><path d="M5 3l6 5-6 5V3z"/></svg>
+          <span data-i18n="sidebar.locale.group">Locale / Region</span>
+        </div>
+        <div class="settings-body">
+          <div class="setting">
+            <div class="setting-label" data-i18n="sidebar.locale.label">言語 / 地域</div>
+            <select id="locale-select" style="width:100%;margin-top:6px;background:var(--bg-code);color:var(--fg);border:1px solid var(--border);border-radius:4px;padding:5px 8px;font-size:12px;font-family:var(--font-mono);">
+              <option value="ja-JP">日本語 (M/D)</option>
+              <option value="en-US">English – US (M/D)</option>
+              <option value="en-GB">English – UK (D/M)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
       <!-- Group: Format -->
       <div class="settings-group" data-group="format">
         <div class="settings-group-header">
           <svg class="chevron" viewBox="0 0 16 16" fill="currentColor"><path d="M5 3l6 5-6 5V3z"/></svg>
-          <span>Date Format</span>
+          <span data-i18n="sidebar.format.group">Date Format</span>
         </div>
         <div class="settings-body">
           <div class="setting">
-            <div class="setting-label">曜日フォーマット</div>
-            <div class="setting-desc">日付の後に付与する曜日の表記</div>
+            <div class="setting-label" data-i18n="sidebar.format.label">曜日フォーマット</div>
+            <div class="setting-desc" data-i18n="sidebar.format.desc">日付の後に付与する曜日の表記</div>
             <div class="radio-group" id="format-group">
               <label class="radio-row"><input type="radio" name="fmt" value="paren-ja" checked /> <span>(月)</span> <code>4/20(月)</code></label>
               <label class="radio-row"><input type="radio" name="fmt" value="paren-ja-full" /> <span>（月）</span> <code>4/20（月）</code></label>
@@ -786,6 +805,11 @@
               <label class="radio-row"><input type="radio" name="fmt" value="space" /> <span>&nbsp;月</span> <code>4/20 月</code></label>
             </div>
           </div>
+          <div class="setting" style="margin-top:8px;">
+            <div class="setting-label" data-i18n="sidebar.format.template.label">カスタムテンプレート</div>
+            <div class="setting-desc" data-i18n="sidebar.format.template.desc">{date} と {weekday} を使って自由にフォーマット</div>
+            <input type="text" id="format-template" data-i18n="sidebar.format.template.placeholder" placeholder="{date}({weekday})" style="width:100%;margin-top:6px;background:var(--bg-code);color:var(--fg);border:1px solid var(--border);border-radius:4px;padding:5px 8px;font-size:12px;font-family:var(--font-mono);" />
+          </div>
         </div>
       </div>
 
@@ -793,20 +817,20 @@
       <div class="settings-group" data-group="year">
         <div class="settings-group-header">
           <svg class="chevron" viewBox="0 0 16 16" fill="currentColor"><path d="M5 3l6 5-6 5V3z"/></svg>
-          <span>Year Inference</span>
+          <span data-i18n="sidebar.year.group">Year Inference</span>
         </div>
         <div class="settings-body">
           <div class="setting">
-            <div class="setting-label">過去日付の年度判定</div>
-            <div class="setting-desc">年が省略され、その日付が既に過ぎている場合の扱い</div>
+            <div class="setting-label" data-i18n="sidebar.year.label">過去日付の年度判定</div>
+            <div class="setting-desc" data-i18n="sidebar.year.desc">年が省略され、その日付が既に過ぎている場合の扱い</div>
             <div class="radio-group" id="year-group">
-              <label class="radio-row"><input type="radio" name="yr" value="current" checked /> <span>今年 (current)</span></label>
-              <label class="radio-row"><input type="radio" name="yr" value="next" /> <span>来年 (next)</span></label>
-              <label class="radio-row"><input type="radio" name="yr" value="nearest" /> <span>最も近い年</span></label>
+              <label class="radio-row"><input type="radio" name="yr" value="current" checked /> <span data-i18n="sidebar.year.current">今年 (current)</span></label>
+              <label class="radio-row"><input type="radio" name="yr" value="next" /> <span data-i18n="sidebar.year.next">来年 (next)</span></label>
+              <label class="radio-row"><input type="radio" name="yr" value="nearest" /> <span data-i18n="sidebar.year.nearest">最も近い年</span></label>
             </div>
           </div>
           <div class="setting">
-            <div class="setting-label">基準日 (Reference Date)</div>
+            <div class="setting-label" data-i18n="sidebar.year.refdate">基準日 (Reference Date)</div>
             <input type="text" id="ref-date" value="2026-04-21" />
           </div>
         </div>
@@ -816,14 +840,14 @@
       <div class="settings-group" data-group="behavior">
         <div class="settings-group-header">
           <svg class="chevron" viewBox="0 0 16 16" fill="currentColor"><path d="M5 3l6 5-6 5V3z"/></svg>
-          <span>Behavior</span>
+          <span data-i18n="sidebar.behavior.group">Behavior</span>
         </div>
         <div class="settings-body">
           <div class="setting">
             <div class="toggle-row">
               <div>
-                <div class="setting-label">自動変換 (Auto)</div>
-                <div class="setting-desc">入力と同時に変換する</div>
+                <div class="setting-label" data-i18n="sidebar.behavior.auto.label">自動変換 (Auto)</div>
+                <div class="setting-desc" data-i18n="sidebar.behavior.auto.desc">入力と同時に変換する</div>
               </div>
               <div class="toggle on" id="toggle-auto" data-key="auto"></div>
             </div>
@@ -831,8 +855,8 @@
           <div class="setting">
             <div class="toggle-row">
               <div>
-                <div class="setting-label">既存曜日の上書き</div>
-                <div class="setting-desc">既に曜日付きの日付も再計算する</div>
+                <div class="setting-label" data-i18n="sidebar.behavior.overwrite.label">既存曜日の上書き</div>
+                <div class="setting-desc" data-i18n="sidebar.behavior.overwrite.desc">既に曜日付きの日付も再計算する</div>
               </div>
               <div class="toggle" id="toggle-overwrite" data-key="overwrite"></div>
             </div>
@@ -840,8 +864,8 @@
           <div class="setting">
             <div class="toggle-row">
               <div>
-                <div class="setting-label">mm/dd のみ対応</div>
-                <div class="setting-desc">yyyy/mm/dd はスキップする</div>
+                <div class="setting-label" data-i18n="sidebar.behavior.mdonly.label">mm/dd のみ対応</div>
+                <div class="setting-desc" data-i18n="sidebar.behavior.mdonly.desc">yyyy/mm/dd はスキップする</div>
               </div>
               <div class="toggle" id="toggle-mdonly" data-key="mdOnly"></div>
             </div>
@@ -849,8 +873,8 @@
           <div class="setting">
             <div class="toggle-row">
               <div>
-                <div class="setting-label">土日を強調</div>
-                <div class="setting-desc">変換後に土日を色で区別する</div>
+                <div class="setting-label" data-i18n="sidebar.behavior.highlight.label">土日を強調</div>
+                <div class="setting-desc" data-i18n="sidebar.behavior.highlight.desc">変換後に土日を色で区別する</div>
               </div>
               <div class="toggle on" id="toggle-highlight" data-key="highlight"></div>
             </div>
@@ -862,7 +886,7 @@
       <div class="settings-group collapsed" data-group="future">
         <div class="settings-group-header">
           <svg class="chevron" viewBox="0 0 16 16" fill="currentColor"><path d="M5 3l6 5-6 5V3z"/></svg>
-          <span>Experimental</span>
+          <span data-i18n="sidebar.experimental.group">Experimental</span>
         </div>
         <div class="settings-body">
           <p class="ext-hint">
@@ -994,6 +1018,7 @@
    UI wiring — core logic is loaded from /addWeekday.js
    ======================================================== */
 const { addWeekday, WEEKDAYS_JA } = addWeekdayLib;
+const { FORMAT_ALIASES } = addWeekdayLib;
 const $ = (s) => document.querySelector(s);
 const inputEl = $('#input');
 const outputEl = $('#output');
@@ -1006,8 +1031,18 @@ const refDateEl = $('#ref-date');
 const copyBtn = $('#btn-copy');
 const toast = $('#toast');
 
+const LOCALE_PRESETS = {
+  'ja-JP': { dateOrder: 'MDY', format: '{date}({weekday})', weekdayStyle: 'ja' },
+  'en-US': { dateOrder: 'MDY', format: '{weekday}, {date}', weekdayStyle: 'en-short' },
+  'en-GB': { dateOrder: 'DMY', format: '{weekday}, {date}', weekdayStyle: 'en-short' },
+};
+
+const savedLocale = localStorage.getItem('add-weekday.locale') || 'ja-JP';
 const settings = {
-  format: 'paren-ja',
+  locale: savedLocale,
+  format: LOCALE_PRESETS[savedLocale].format,
+  weekdayStyle: LOCALE_PRESETS[savedLocale].weekdayStyle,
+  dateOrder: LOCALE_PRESETS[savedLocale].dateOrder,
   yearMode: 'current',
   auto: true,
   overwrite: false,
@@ -1015,15 +1050,64 @@ const settings = {
   highlight: true,
   refDate: '2026-04-21',
 };
+let formatCustomized = false;
 
 // --- settings group collapse ---
 document.querySelectorAll('.settings-group-header').forEach(h => {
   h.addEventListener('click', () => h.parentElement.classList.toggle('collapsed'));
 });
 
+// --- locale select ---
+const localeSelectEl = $('#locale-select');
+localeSelectEl.value = settings.locale;
+
+function applyLocalePreset(locale) {
+  const preset = LOCALE_PRESETS[locale] || LOCALE_PRESETS['ja-JP'];
+  settings.locale    = locale;
+  settings.dateOrder = preset.dateOrder;
+  settings.weekdayStyle = preset.weekdayStyle;
+  if (!formatCustomized) {
+    settings.format = preset.format;
+    $('#format-template').value = preset.format;
+    // Sync radio to alias if it matches, else deselect all
+    let matched = false;
+    document.querySelectorAll('#format-group input').forEach(r => {
+      const alias = FORMAT_ALIASES[r.value];
+      r.checked = alias && alias.template === preset.format && alias.weekdayStyle === preset.weekdayStyle;
+      if (r.checked) matched = true;
+    });
+  }
+  localStorage.setItem('add-weekday.locale', locale);
+  applyI18n(locale);
+  run();
+}
+
+localeSelectEl.addEventListener('change', () => applyLocalePreset(localeSelectEl.value));
+
+// --- format template input ---
+const formatTemplateEl = $('#format-template');
+formatTemplateEl.value = settings.format;
+formatTemplateEl.addEventListener('input', () => {
+  const val = formatTemplateEl.value.trim();
+  if (val) {
+    formatCustomized = true;
+    settings.format = val;
+    // Deselect all radios when custom template is active
+    document.querySelectorAll('#format-group input').forEach(r => { r.checked = false; });
+    run();
+  }
+});
+
 // --- radio groups ---
 document.querySelectorAll('#format-group input').forEach(r => {
-  r.addEventListener('change', () => { settings.format = r.value; run(); });
+  r.addEventListener('change', () => {
+    formatCustomized = false;
+    settings.format = r.value;
+    // Reflect alias template in the template input
+    const alias = FORMAT_ALIASES[r.value];
+    if (alias) formatTemplateEl.value = alias.template;
+    run();
+  });
 });
 document.querySelectorAll('#year-group input').forEach(r => {
   r.addEventListener('change', () => { settings.yearMode = r.value; run(); });
@@ -1124,11 +1208,13 @@ let lastCount = 0;
 function run(showHint=false) {
   const refDate = parseDate(settings.refDate) || new Date();
   const { text, count } = addWeekday(inputEl.value, {
-    format: settings.format,
-    yearMode: settings.yearMode,
+    format:       settings.format,
+    weekdayStyle: settings.weekdayStyle,
+    dateOrder:    settings.dateOrder,
+    yearMode:     settings.yearMode,
     refDate,
-    overwrite: settings.overwrite,
-    mdOnly: settings.mdOnly,
+    overwrite:    settings.overwrite,
+    mdOnly:       settings.mdOnly,
   });
   lastOutput = text;
   lastCount = count;
@@ -1255,6 +1341,15 @@ const SAMPLE_TEXT = `# Q2 プロジェクト タイムライン
 `;
 
 // --- initial state ---
+applyI18n(settings.locale);
+// Initial format radio sync
+(function() {
+  const preset = LOCALE_PRESETS[settings.locale] || LOCALE_PRESETS['ja-JP'];
+  document.querySelectorAll('#format-group input').forEach(r => {
+    const alias = FORMAT_ALIASES[r.value];
+    r.checked = !!(alias && alias.template === preset.format && alias.weekdayStyle === preset.weekdayStyle);
+  });
+})();
 inputEl.value = SAMPLE_TEXT;
 updateGutter();
 updateCursor();

@@ -371,7 +371,7 @@
   </a>
   <nav class="header-nav">
     <a href="https://github.com/zohiro00/add-weekday" target="_blank" rel="noopener">GitHub</a>
-    <a href="/engine" class="btn-primary">ツールを開く →</a>
+    <a href="/engine" class="btn-primary" data-i18n="lp.nav.open">ツールを開く →</a>
   </nav>
 </header>
 
@@ -383,16 +383,16 @@
       <span class="dot"></span>
       v0.2.0 — zero dependency
     </div>
-    <h1 class="hero-title">
+    <h1 class="hero-title" data-i18n-html="lp.hero.title">
       日付テキストに<br><span class="hl">曜日</span>を自動付与
     </h1>
-    <p class="hero-sub">
+    <p class="hero-sub" data-i18n-html="lp.hero.sub">
       マークダウンや議事録の日付（<code style="font-family:var(--font-mono);color:var(--syntax-date);font-size:14px">4/20</code>）に、
       曜日を一括で追加します。コピペするだけ、ゼロ設定。
     </p>
     <a href="/engine" class="hero-cta">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-      ツールを開く
+      <span data-i18n="lp.hero.cta">ツールを開く</span>
     </a>
 
     <!-- Before / After demo -->
@@ -423,71 +423,71 @@
         <div class="feature-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M13 2v7h7"/></svg>
         </div>
-        <div class="feature-name">マークダウン対応</div>
-        <div class="feature-desc">テーブル・リスト・本文中など、マークダウン内の日付をまとめて変換。</div>
+        <div class="feature-name" data-i18n="lp.feature.markdown.name">マークダウン対応</div>
+        <div class="feature-desc" data-i18n="lp.feature.markdown.desc">テーブル・リスト・本文中など、マークダウン内の日付をまとめて変換。</div>
       </div>
       <div class="feature-card">
         <div class="feature-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
         </div>
-        <div class="feature-name">即時プレビュー</div>
-        <div class="feature-desc">入力しながらリアルタイムで変換結果を確認。Source / Preview の切り替えも可能。</div>
+        <div class="feature-name" data-i18n="lp.feature.preview.name">即時プレビュー</div>
+        <div class="feature-desc" data-i18n="lp.feature.preview.desc">入力しながらリアルタイムで変換結果を確認。Source / Preview の切り替えも可能。</div>
       </div>
       <div class="feature-card">
         <div class="feature-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4 12.5-12.5z"/></svg>
         </div>
-        <div class="feature-name">複数フォーマット</div>
-        <div class="feature-desc"><code style="font-size:11px;font-family:var(--font-mono);color:var(--syntax-string)">(月)</code> <code style="font-size:11px;font-family:var(--font-mono);color:var(--syntax-string)">[月]</code> <code style="font-size:11px;font-family:var(--font-mono);color:var(--syntax-string)">(Mon)</code> など5種類の出力フォーマットを選択可能。</div>
+        <div class="feature-name" data-i18n="lp.feature.format.name">複数フォーマット</div>
+        <div class="feature-desc" data-i18n-html="lp.feature.format.desc"><code style="font-size:11px;font-family:var(--font-mono);color:var(--syntax-string)">(月)</code> <code style="font-size:11px;font-family:var(--font-mono);color:var(--syntax-string)">[月]</code> <code style="font-size:11px;font-family:var(--font-mono);color:var(--syntax-string)">(Mon)</code> など5種類の出力フォーマットを選択可能。</div>
       </div>
       <div class="feature-card">
         <div class="feature-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
         </div>
-        <div class="feature-name">年度推定</div>
-        <div class="feature-desc"><code style="font-size:11px;font-family:var(--font-mono);color:var(--syntax-string)">4/20</code> のような年省略日付は、基準日を元に正しい年を自動推定。</div>
+        <div class="feature-name" data-i18n="lp.feature.year.name">年度推定</div>
+        <div class="feature-desc" data-i18n-html="lp.feature.year.desc"><code style="font-size:11px;font-family:var(--font-mono);color:var(--syntax-string)">4/20</code> のような年省略日付は、基準日を元に正しい年を自動推定。</div>
       </div>
     </div>
   </section>
 
   <!-- Format samples -->
   <section class="formats">
-    <div class="formats-title">Format Options</div>
+    <div class="formats-title" data-i18n="lp.formats.title">Format Options</div>
     <div class="format-list">
       <div class="format-row">
         <span class="format-input">4/20</span>
         <span class="format-arrow">→</span>
-        <span class="format-output"><span class="date">4/20</span><span class="wd">(月)</span>　<span style="color:var(--fg-dim);font-size:11px">デフォルト</span></span>
+        <span class="format-output"><span class="date">4/20</span><span class="wd">(月)</span>　<span style="color:var(--fg-dim);font-size:11px" data-i18n="lp.fmt.default">デフォルト</span></span>
       </div>
       <div class="format-row">
         <span class="format-input">4/20</span>
         <span class="format-arrow">→</span>
-        <span class="format-output"><span class="date">4/20</span><span class="wd">（月）</span>　<span style="color:var(--fg-dim);font-size:11px">全角括弧</span></span>
+        <span class="format-output"><span class="date">4/20</span><span class="wd">（月）</span>　<span style="color:var(--fg-dim);font-size:11px" data-i18n="lp.fmt.fullwidth">全角括弧</span></span>
       </div>
       <div class="format-row">
         <span class="format-input">4/20</span>
         <span class="format-arrow">→</span>
-        <span class="format-output"><span class="date">4/20</span><span class="wd">(Mon)</span>　<span style="color:var(--fg-dim);font-size:11px">英語</span></span>
+        <span class="format-output"><span class="date">4/20</span><span class="wd">(Mon)</span>　<span style="color:var(--fg-dim);font-size:11px" data-i18n="lp.fmt.english">英語</span></span>
       </div>
       <div class="format-row">
         <span class="format-input">4/20</span>
         <span class="format-arrow">→</span>
-        <span class="format-output"><span class="date">4/20</span><span class="wd">[月]</span>　<span style="color:var(--fg-dim);font-size:11px">角括弧</span></span>
+        <span class="format-output"><span class="date">4/20</span><span class="wd">[月]</span>　<span style="color:var(--fg-dim);font-size:11px" data-i18n="lp.fmt.bracket">角括弧</span></span>
       </div>
       <div class="format-row">
         <span class="format-input">4/20</span>
         <span class="format-arrow">→</span>
-        <span class="format-output"><span class="date">4/20</span><span class="wd"> 月</span>　<span style="color:var(--fg-dim);font-size:11px">スペース区切り</span></span>
+        <span class="format-output"><span class="date">4/20</span><span class="wd"> 月</span>　<span style="color:var(--fg-dim);font-size:11px" data-i18n="lp.fmt.space">スペース区切り</span></span>
       </div>
     </div>
   </section>
 
   <!-- Bottom CTA -->
   <section class="bottom-cta">
-    <p>ブラウザで今すぐ使えます。インストール不要。</p>
+    <p data-i18n="lp.cta.text">ブラウザで今すぐ使えます。インストール不要。</p>
     <a href="/engine" class="hero-cta">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
-      ツールを開く
+      <span data-i18n="lp.cta.btn">ツールを開く</span>
     </a>
   </section>
 
@@ -496,11 +496,18 @@
 <footer>
   <span>© 2026 zohiro00 — MIT License</span>
   <span style="display: flex; gap: 16px;">
-    <a href="/terms.html">利用規約</a>
-    <a href="/privacy.html">プライバシーポリシー</a>
+    <a href="/terms.html" data-i18n="lp.footer.terms">利用規約</a>
+    <a href="/privacy.html" data-i18n="lp.footer.privacy">プライバシーポリシー</a>
     <a href="https://github.com/zohiro00/add-weekday" target="_blank" rel="noopener">GitHub</a>
   </span>
 </footer>
 
+<script src="/engine/i18n.js"></script>
+<script>
+  (function() {
+    var locale = localStorage.getItem('add-weekday.locale') || 'ja-JP';
+    if (typeof applyI18n === 'function') applyI18n(locale);
+  })();
+</script>
 </body>
 </html>
