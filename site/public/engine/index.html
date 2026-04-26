@@ -90,7 +90,7 @@
   /* ============ App Shell ============ */
   .app {
     display: grid;
-    grid-template-rows: 35px 1fr 22px;
+    grid-template-rows: 44px 1fr 22px;
     height: 100vh;
   }
 
@@ -117,14 +117,8 @@
     text-decoration: none;
   }
   .titlebar-brand .brand-icon {
-    width: 18px; height: 18px;
-    background: rgba(255,255,255,0.25);
-    border-radius: 4px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 10px;
-    font-weight: 800;
-    color: #fff;
-    font-family: var(--font-mono);
+    width: 24px; height: 24px;
+    border-radius: 5px;
   }
   .titlebar-title {
     flex: 1;
@@ -742,7 +736,7 @@
   <!-- Title bar -->
   <div class="titlebar">
     <a href="/" class="titlebar-brand">
-      <span class="brand-icon">+曜</span>
+      <img src="/favicon.svg" alt="" class="brand-icon">
       add-weekday
     </a>
     <div class="titlebar-title">
