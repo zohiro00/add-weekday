@@ -447,6 +447,13 @@
         <div class="feature-name" data-i18n="lp.feature.year.name">年度推定</div>
         <div class="feature-desc" data-i18n-html="lp.feature.year.desc"><code style="font-size:11px;font-family:var(--font-mono);color:var(--syntax-string)">4/20</code> のような年省略日付は、基準日を元に正しい年を自動推定。</div>
       </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+        </div>
+        <div class="feature-name" data-i18n="lp.feature.i18n.name">多言語対応</div>
+        <div class="feature-desc" data-i18n-html="lp.feature.i18n.desc">日本語 <code style="font-size:11px;font-family:var(--font-mono);color:var(--syntax-string)">4/20(月)</code>・英語 <code style="font-size:11px;font-family:var(--font-mono);color:var(--syntax-string)">Mon, 4/20</code>・英国 <code style="font-size:11px;font-family:var(--font-mono);color:var(--syntax-string)">Mon, 20/4</code> など、ロケール別に自動切り替え。</div>
+      </div>
     </div>
   </section>
 
@@ -478,6 +485,11 @@
         <span class="format-input">4/20</span>
         <span class="format-arrow">→</span>
         <span class="format-output"><span class="date">4/20</span><span class="wd"> 月</span>　<span style="color:var(--fg-dim);font-size:11px" data-i18n="lp.fmt.space">スペース区切り</span></span>
+      </div>
+      <div class="format-row">
+        <span class="format-input">4/20</span>
+        <span class="format-arrow">→</span>
+        <span class="format-output"><span class="wd">Mon</span>, <span class="date">4/20</span>　<span style="color:var(--fg-dim);font-size:11px" data-i18n="lp.fmt.locale-en">英語ロケール</span></span>
       </div>
     </div>
   </section>
