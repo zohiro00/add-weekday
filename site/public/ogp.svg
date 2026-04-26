@@ -20,7 +20,7 @@
   <!-- Badge -->
   <rect x="60" y="140" width="240" height="32" rx="16" fill="rgba(0,158,96,0.12)" stroke="rgba(0,158,96,0.3)" stroke-width="1"/>
   <circle cx="82" cy="156" r="5" fill="#4ec9b0"/>
-  <text x="98" y="161" class="font-mono" font-size="16" fill="#4ec9b0">v0.2.0 — zero dependency</text>
+  <text x="98" y="161" class="font-mono" font-size="16" fill="#4ec9b0">zero dependency</text>
 
   <!-- Hero title -->
   <text x="60" y="260" class="font-sans" font-weight="700" font-size="64" fill="white">日付テキストに</text>
