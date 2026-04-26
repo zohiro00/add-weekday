@@ -12,46 +12,46 @@
   <!-- Top accent bar -->
   <rect width="1200" height="6" fill="#009e60"/>
 
-  <!-- Brand area (top-left) -->
-  <rect x="60" y="52" width="42" height="42" rx="8" fill="rgba(255,255,255,0.12)"/>
-  <text x="81" y="80" text-anchor="middle" class="font-mono" font-weight="800" font-size="15" fill="white">+曜</text>
-  <text x="116" y="80" class="font-sans" font-weight="700" font-size="22" fill="white">add-weekday</text>
+  <!-- Brand area (top-left): favicon + name -->
+  <svg x="60" y="48" width="42" height="42" viewBox="0 0 32 32">
+    <rect width="32" height="32" rx="8" fill="#009e60"/>
+    <rect x="4" y="6" width="24" height="21" rx="2" fill="white"/>
+    <path d="M4 8c0-1.1.9-2 2-2h20c1.1 0 2 .9 2 2v4H4V8z" fill="#007a4a"/>
+    <circle cx="10" cy="8.5" r="1.5" fill="white"/>
+    <circle cx="22" cy="8.5" r="1.5" fill="white"/>
+    <text x="12" y="24" font-size="13" text-anchor="middle" fill="#009e60" font-weight="900" font-family="Verdana, sans-serif">W</text>
+    <g stroke="#009e60" stroke-width="2.8" stroke-linecap="round">
+      <line x1="20" y1="20" x2="26" y2="20"/>
+      <line x1="23" y1="17" x2="23" y2="23"/>
+    </g>
+  </svg>
+  <text x="114" y="76" class="font-sans" font-weight="700" font-size="22" fill="white">add-weekday</text>
 
-  <!-- Badge -->
-  <rect x="60" y="140" width="240" height="32" rx="16" fill="rgba(0,158,96,0.12)" stroke="rgba(0,158,96,0.3)" stroke-width="1"/>
-  <circle cx="82" cy="156" r="5" fill="#4ec9b0"/>
-  <text x="98" y="161" class="font-mono" font-size="16" fill="#4ec9b0">zero dependency</text>
+  <!-- Top-right: site name -->
+  <text x="1140" y="76" text-anchor="end" class="font-sans" font-size="14" fill="#4a4a4a">add-weekday.com</text>
 
   <!-- Hero title -->
-  <text x="60" y="260" class="font-sans" font-weight="700" font-size="64" fill="white">日付テキストに</text>
-  <text x="60" y="340" class="font-sans" font-weight="700" font-size="64" fill="#c586c0">曜日</text>
-  <text x="220" y="340" class="font-sans" font-weight="700" font-size="64" fill="white">を自動付与</text>
+  <text x="60" y="240" class="font-sans" font-weight="700" font-size="64" fill="white">日付テキストに</text>
+  <text x="60" y="320" class="font-sans" font-weight="700" font-size="64" fill="#c586c0">曜日</text>
+  <text x="220" y="320" class="font-sans" font-weight="700" font-size="64" fill="white">を自動付与</text>
 
   <!-- Sub description -->
-  <text x="60" y="400" class="font-sans" font-size="22" fill="#858585">マークダウンや議事録の日付に曜日を一括で追加。コピペするだけ、ゼロ設定。</text>
+  <text x="60" y="380" class="font-sans" font-size="22" fill="#858585">マークダウンや議事録の日付に曜日を一括で追加。コピペするだけ、ゼロ設定。</text>
 
-  <!-- Before / After demo box -->
   <!-- Before box -->
-  <rect x="60" y="450" width="340" height="148" rx="8" fill="#0d1117" stroke="#3e3e3e" stroke-width="1"/>
-  <text x="80" y="476" class="font-mono" font-size="11" fill="#6a6a6a" letter-spacing="1">BEFORE</text>
-  <text x="80" y="502" class="font-mono" font-size="18" fill="#858585">- キックオフ: <tspan fill="#4ec9b0">4/22</tspan></text>
-  <text x="80" y="528" class="font-mono" font-size="18" fill="#858585">- レビュー: <tspan fill="#4ec9b0">4/28</tspan></text>
-  <text x="80" y="554" class="font-mono" font-size="18" fill="#858585">- リリース: <tspan fill="#4ec9b0">2026/6/30</tspan></text>
-  <text x="80" y="580" class="font-mono" font-size="18" fill="#858585">- 締切: <tspan fill="#4ec9b0">12/31</tspan></text>
+  <rect x="60" y="430" width="340" height="120" rx="8" fill="#0d1117" stroke="#3e3e3e" stroke-width="1"/>
+  <text x="80" y="456" class="font-mono" font-size="11" fill="#6a6a6a" letter-spacing="1">BEFORE</text>
+  <text x="80" y="482" class="font-mono" font-size="18" fill="#858585">- キックオフ: <tspan fill="#4ec9b0">4/22</tspan></text>
+  <text x="80" y="508" class="font-mono" font-size="18" fill="#858585">- レビュー: <tspan fill="#4ec9b0">4/28</tspan></text>
+  <text x="80" y="534" class="font-mono" font-size="18" fill="#858585">- リリース: <tspan fill="#4ec9b0">2026/6/30</tspan></text>
 
   <!-- Arrow -->
-  <text x="422" y="532" class="font-sans" font-size="36" fill="#6a6a6a">→</text>
+  <text x="422" y="500" class="font-sans" font-size="36" fill="#6a6a6a">→</text>
 
   <!-- After box -->
-  <rect x="484" y="450" width="396" height="148" rx="8" fill="#0d1117" stroke="#009e60" stroke-width="1"/>
-  <text x="504" y="476" class="font-mono" font-size="11" fill="#6a6a6a" letter-spacing="1">AFTER</text>
-  <text x="504" y="502" class="font-mono" font-size="18" fill="#858585">- キックオフ: <tspan fill="#4ec9b0">4/22</tspan><tspan fill="#c586c0" font-weight="600">(水)</tspan></text>
-  <text x="504" y="528" class="font-mono" font-size="18" fill="#858585">- レビュー: <tspan fill="#4ec9b0">4/28</tspan><tspan fill="#c586c0" font-weight="600">(火)</tspan></text>
-  <text x="504" y="554" class="font-mono" font-size="18" fill="#858585">- リリース: <tspan fill="#4ec9b0">2026/6/30</tspan><tspan fill="#c586c0" font-weight="600">(火)</tspan></text>
-  <text x="504" y="580" class="font-mono" font-size="18" fill="#858585">- 締切: <tspan fill="#4ec9b0">12/31</tspan><tspan fill="#c586c0" font-weight="600">(木)</tspan></text>
-
-  <!-- Right side visual accent -->
-  <rect x="920" y="440" width="220" height="100" rx="8" fill="rgba(0,158,96,0.08)" stroke="rgba(0,158,96,0.2)" stroke-width="1"/>
-  <text x="1030" y="480" text-anchor="middle" class="font-mono" font-weight="800" font-size="42" fill="#009e60">+曜</text>
-  <text x="1030" y="516" text-anchor="middle" class="font-sans" font-size="14" fill="#4a4a4a">add-weekday.com</text>
+  <rect x="484" y="430" width="380" height="120" rx="8" fill="#0d1117" stroke="#009e60" stroke-width="1"/>
+  <text x="504" y="456" class="font-mono" font-size="11" fill="#6a6a6a" letter-spacing="1">AFTER</text>
+  <text x="504" y="482" class="font-mono" font-size="18" fill="#858585">- キックオフ: <tspan fill="#4ec9b0">4/22</tspan><tspan fill="#c586c0" font-weight="600">(水)</tspan></text>
+  <text x="504" y="508" class="font-mono" font-size="18" fill="#858585">- レビュー: <tspan fill="#4ec9b0">4/28</tspan><tspan fill="#c586c0" font-weight="600">(火)</tspan></text>
+  <text x="504" y="534" class="font-mono" font-size="18" fill="#858585">- リリース: <tspan fill="#4ec9b0">2026/6/30</tspan><tspan fill="#c586c0" font-weight="600">(火)</tspan></text>
 </svg>
