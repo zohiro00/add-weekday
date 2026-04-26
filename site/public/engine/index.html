@@ -859,7 +859,7 @@
                 <div class="setting-label" data-i18n="sidebar.behavior.overwrite.label">既存曜日の上書き</div>
                 <div class="setting-desc" data-i18n="sidebar.behavior.overwrite.desc">既に曜日付きの日付も再計算する</div>
               </div>
-              <div class="toggle" id="toggle-overwrite" data-key="overwrite"></div>
+              <div class="toggle on" id="toggle-overwrite" data-key="overwrite"></div>
             </div>
           </div>
           <div class="setting">
@@ -1046,7 +1046,7 @@ const settings = {
   dateOrder: LOCALE_PRESETS[savedLocale].dateOrder,
   yearMode: 'current',
   auto: true,
-  overwrite: false,
+  overwrite: true,
   mdOnly: false,
   highlight: true,
   refDate: '2026-04-21',
@@ -1366,7 +1366,7 @@ const SAMPLE_TEXT = `# Q2 プロジェクト タイムライン
 ## 備考
 
 - 締切日 (12/31) を忘れずに
-- 既存の日付 \`5/1(金)\` は上書きしません
+- 既存の日付 \`5/1(金)\` も再計算します
 - 不正日付 (例: 2/30) はそのまま
 - 年跨ぎの確認: 1/5, 3/15 など
 
