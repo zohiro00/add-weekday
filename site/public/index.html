@@ -11,16 +11,16 @@
   gtag('js', new Date());
   gtag('config', 'G-WLGMGJ9DTQ');
 </script>
-<title>add-weekday — 日付テキストに曜日を自動付与</title>
-<meta name="description" content="マークダウンやテキストの日付（4/20など）に曜日を自動で追加するWebツール。4/20 → 4/20(月)。" />
+<title>add-weekday | マークダウンの日付に自動で曜日を付与するツール</title>
+<meta name="description" content="4/20 を 4/20(月) に変換。マークダウンや議事録の日付に曜日を一括付与するブラウザ完結・ゼロ依存のツールとライブラリ。Node.js・ブラウザ・VSCode 対応。" />
 <!-- Favicon -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="canonical" href="https://add-weekday.com/" />
 <!-- OGP -->
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://add-weekday.com/" />
-<meta property="og:title" content="add-weekday — 日付テキストに曜日を自動付与" />
-<meta property="og:description" content="マークダウンや議事録の日付（4/20など）に曜日を一括で追加。コピペするだけ、ゼロ設定。" />
+<meta property="og:title" content="add-weekday | マークダウンの日付に自動で曜日を付与するツール" />
+<meta property="og:description" content="4/20 を 4/20(月) に変換。マークダウンや議事録の日付に曜日を一括付与するブラウザ完結・ゼロ依存のツールとライブラリ。" />
 <meta property="og:image" content="https://add-weekday.com/ogp.svg" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
@@ -28,8 +28,8 @@
 <meta property="og:site_name" content="add-weekday" />
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content="add-weekday — 日付テキストに曜日を自動付与" />
-<meta name="twitter:description" content="マークダウンや議事録の日付（4/20など）に曜日を一括で追加。コピペするだけ、ゼロ設定。" />
+<meta name="twitter:title" content="add-weekday | マークダウンの日付に自動で曜日を付与するツール" />
+<meta name="twitter:description" content="4/20 を 4/20(月) に変換。マークダウンや議事録の日付に曜日を一括付与するブラウザ完結・ゼロ依存ツール。" />
 <meta name="twitter:image" content="https://add-weekday.com/ogp.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -320,6 +320,104 @@
   .format-output .date { color: var(--syntax-date); }
   .format-output .wd { color: var(--syntax-weekday); }
 
+  /* ===== Direct answer block ===== */
+  .direct-answer {
+    background: var(--bg-surface);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--fm-green);
+    border-radius: 0 8px 8px 0;
+    padding: 18px 22px;
+    margin: 40px auto 0;
+    max-width: 640px;
+    font-size: 14px;
+    line-height: 1.75;
+    color: var(--fg);
+  }
+
+  /* ===== Before/After table ===== */
+  .conversion-table {
+    padding: 0 24px 48px;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .conversion-table h2 {
+    text-align: center;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--fg-dim);
+    margin-bottom: 16px;
+  }
+  .conv-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    background: var(--bg-code);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .conv-table th {
+    padding: 8px 16px;
+    text-align: left;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--fg-dim);
+    border-bottom: 1px solid var(--border);
+    font-weight: 500;
+  }
+  .conv-table td {
+    padding: 9px 16px;
+    border-bottom: 1px solid var(--border-soft);
+    color: var(--fg-muted);
+  }
+  .conv-table tr:last-child td { border-bottom: none; }
+  .conv-table .td-in { color: var(--syntax-date); }
+  .conv-table .td-out { color: var(--fg-strong); }
+  .conv-table .td-out .wd { color: var(--syntax-weekday); }
+  .conv-table .td-note { font-size: 11px; color: var(--fg-dim); }
+
+  /* ===== FAQ ===== */
+  .faq {
+    padding: 0 24px 64px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .faq-title {
+    text-align: center;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--fg-dim);
+    margin-bottom: 24px;
+  }
+  .faq-item {
+    border-bottom: 1px solid var(--border-soft);
+    padding: 16px 0;
+  }
+  .faq-item:last-child { border-bottom: none; }
+  .faq-q {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--fg-strong);
+    margin-bottom: 8px;
+  }
+  .faq-a {
+    font-size: 13px;
+    color: var(--fg-muted);
+    line-height: 1.65;
+  }
+  .faq-a code {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--syntax-string);
+    background: var(--bg-code);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+
   /* ===== Bottom CTA ===== */
   .bottom-cta {
     padding: 48px 24px 64px;
@@ -389,6 +487,11 @@
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
       <span data-i18n="lp.hero.cta">ツールを開く</span>
     </a>
+
+    <!-- Direct answer block -->
+    <p class="direct-answer">
+      add-weekday は、テキストに含まれる日付（例: <code style="font-family:var(--font-mono);color:var(--syntax-date);font-size:13px">4/20</code>、<code style="font-family:var(--font-mono);color:var(--syntax-date);font-size:13px">2024/04/20</code>）に対して、対応する曜日（例: <code style="font-family:var(--font-mono);color:var(--syntax-weekday);font-size:13px">4/20(月)</code>）を自動で付与するブラウザ完結のツールです。マークダウンメモや議事録の日付整形に使え、ゼロ依存の JavaScript ライブラリとして Node.js・ブラウザ・VSCode 拡張でも動作します。MIT ライセンス、無料。
+    </p>
 
     <!-- Before / After demo -->
     <div class="demo">
@@ -489,6 +592,92 @@
     </div>
   </section>
 
+  <!-- Before / After conversion table -->
+  <section class="conversion-table">
+    <h2>変換例</h2>
+    <table class="conv-table">
+      <thead>
+        <tr>
+          <th>入力</th>
+          <th>出力</th>
+          <th>補足</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-in">4/20</td>
+          <td class="td-out"><span class="wd">4/20(月)</span></td>
+          <td class="td-note">年は現在年を使用</td>
+        </tr>
+        <tr>
+          <td class="td-in">04/20</td>
+          <td class="td-out"><span class="wd">04/20(月)</span></td>
+          <td class="td-note">ゼロ埋めも対応</td>
+        </tr>
+        <tr>
+          <td class="td-in">2024/04/20</td>
+          <td class="td-out"><span class="wd">2024/04/20(土)</span></td>
+          <td class="td-note">年付きはその年で計算</td>
+        </tr>
+        <tr>
+          <td class="td-in">4/20（月）</td>
+          <td class="td-out">4/20（月）</td>
+          <td class="td-note">既に曜日付きは変更なし</td>
+        </tr>
+        <tr>
+          <td class="td-in">4/20</td>
+          <td class="td-out"><span class="wd">4/20(Mon)</span></td>
+          <td class="td-note">英語出力も対応</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- FAQ -->
+  <section class="faq">
+    <h2 class="faq-title">よくある質問</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">マークダウンの日付に自動で曜日を付ける方法はありますか？</div>
+      <div class="faq-a">add-weekday を使うと、テキスト中の <code>4/20</code> のような日付に対して <code>4/20(月)</code> のように曜日を自動付与できます。Web エディタにテキストを貼り付けてボタンを押すだけです。インストール不要、ブラウザだけで動作します。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q"><code>2024/04/20</code> のような年付き日付にも対応していますか？</div>
+      <div class="faq-a">はい。<code>yyyy/mm/dd</code> 形式も <code>mm/dd</code> 形式も両方対応します。年が省略された場合はデフォルトで現在年を使用し、<code>yearMode</code> オプションで <code>current</code>・<code>next</code>・<code>nearest</code> を選択できます。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">既に曜日が書かれている日付は上書きされますか？</div>
+      <div class="faq-a">デフォルトでは上書きされません。<code>overwrite: true</code> を指定すると既存の曜日を再計算して上書きします。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">ライブラリとして Node.js から呼び出せますか？</div>
+      <div class="faq-a">はい。<code>addWeekday.js</code> は UMD 形式のゼロ依存ライブラリで、<code>require()</code>・ESM・<code>&lt;script&gt;</code> タグのいずれの読み込み方にも対応します。Node.js、ブラウザ、どちらでも動作します。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">英語表記の曜日には対応していますか？</div>
+      <div class="faq-a">対応しています。<code>weekdayStyle: "en-short"</code> で <code>Mon</code>、<code>"en-long"</code> で <code>Monday</code> を出力します。英語ロケール向けには <code>Mon, 4/20</code> 形式にも変換できます。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">料金はかかりますか？</div>
+      <div class="faq-a">無料です。MIT ライセンスのオープンソースソフトウェアなので、個人・商用を問わず無料で利用できます。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">議事録の日付フォーマットを一括で統一できますか？</div>
+      <div class="faq-a">はい。議事録やタスクリストのテキストをまとめて貼り付けると、すべての日付に曜日を一括付与します。マークダウンのリスト・テーブル・本文中の日付にも対応しています。</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">祝日には対応していますか？</div>
+      <div class="faq-a">現在は未対応です。曜日の付与に特化したツールです。祝日判定が必要な場合は別途カレンダー API と組み合わせてください。</div>
+    </div>
+  </section>
+
   <!-- Bottom CTA -->
   <section class="bottom-cta">
     <p data-i18n="lp.cta.text">ブラウザで今すぐ使えます。インストール不要。</p>
@@ -501,7 +690,7 @@
 </main>
 
 <footer>
-  <span>© 2026 zohiro00 — MIT License</span>
+  <span>© 2026 zohiro00 — MIT License &nbsp;·&nbsp; <time datetime="2026-05-13">最終更新: 2026年5月13日</time></span>
   <span style="display: flex; gap: 16px;">
     <a href="/terms.html" data-i18n="lp.footer.terms">利用規約</a>
     <a href="/privacy.html" data-i18n="lp.footer.privacy">プライバシーポリシー</a>
@@ -512,18 +701,107 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "WebApplication",
+  "@type": "SoftwareApplication",
   "name": "add-weekday",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Web, Node.js",
+  "description": "マークダウンや議事録テキストに含まれる日付に自動で曜日を付与するゼロ依存ツール。4/20 を 4/20(月) に変換。ブラウザ完結、インストール不要。",
   "url": "https://add-weekday.com/",
-  "description": "マークダウンやテキストの日付（4/20など）に曜日を自動で追加するWebツール。",
-  "applicationCategory": "UtilitiesApplication",
-  "operatingSystem": "Any",
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "JPY"
-  },
+  "softwareVersion": "0.2.0",
+  "license": "https://opensource.org/licenses/MIT",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "JPY" },
+  "author": { "@type": "Person", "name": "zohiro00" },
+  "codeRepository": "https://github.com/zohiro00/add-weekday",
   "inLanguage": "ja-JP"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "マークダウンの日付に自動で曜日を付ける方法はありますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "add-weekday を使うと、テキスト中の 4/20 のような日付に対して 4/20(月) のように曜日を自動付与できます。Web エディタにテキストを貼り付けてボタンを押すだけです。インストール不要、ブラウザだけで動作します。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "2024/04/20 のような年付き日付にも対応していますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "はい。yyyy/mm/dd 形式も mm/dd 形式も両方対応します。年が省略された場合はデフォルトで現在年を使用し、yearMode オプションで current・next・nearest を選択できます。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "既に曜日が書かれている日付は上書きされますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "デフォルトでは上書きされません。overwrite: true を指定すると既存の曜日を再計算して上書きします。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "ライブラリとして Node.js から呼び出せますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "はい。addWeekday.js は UMD 形式のゼロ依存ライブラリで、require()・ESM・script タグのいずれの読み込み方にも対応します。Node.js、ブラウザ、どちらでも動作します。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "英語表記の曜日には対応していますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "対応しています。weekdayStyle: en-short で Mon、en-long で Monday を出力します。英語ロケール向けには Mon, 4/20 形式にも変換できます。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "料金はかかりますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "無料です。MIT ライセンスのオープンソースソフトウェアなので、個人・商用を問わず無料で利用できます。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "議事録の日付フォーマットを一括で統一できますか？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "はい。議事録やタスクリストのテキストをまとめて貼り付けると、すべての日付に曜日を一括付与します。マークダウンのリスト・テーブル・本文中の日付にも対応しています。"
+      }
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HowTo",
+  "name": "マークダウンの日付に曜日を自動付与する方法",
+  "description": "add-weekday を使ってマークダウンや議事録の日付に曜日を一括付与する手順",
+  "step": [
+    {
+      "@type": "HowToStep",
+      "name": "ツールを開く",
+      "text": "add-weekday.com/engine をブラウザで開きます。インストールは不要です。"
+    },
+    {
+      "@type": "HowToStep",
+      "name": "テキストを貼り付ける",
+      "text": "曜日を付けたい日付を含むテキスト（マークダウン・議事録など）を入力欄に貼り付けます。"
+    },
+    {
+      "@type": "HowToStep",
+      "name": "変換結果をコピーする",
+      "text": "変換後テキストが自動表示されるので、コピーボタンを押して結果を取得します。4/20 が 4/20(月) のように変換されています。"
+    }
+  ]
 }
 </script>
 <script src="/engine/i18n.js"></script>

@@ -1,0 +1,53 @@
+# add-weekday
+
+> マークダウンや議事録のテキストに含まれる日付（4/20 や 2024/04/20）に
+> 自動で曜日（例: 4/20(月)）を付与する、ブラウザ完結のツール／
+> ゼロ依存 JavaScript ライブラリ。
+
+## 概要
+
+add-weekday はテキスト中の日付パターンを正規表現で検出し、対応する曜日を
+日本語または英語で付与します。Web エディタとして利用するほか、UMD 形式の
+ライブラリとして Node.js・ブラウザ・VSCode 拡張のいずれでも動作します。
+
+MIT ライセンス、ゼロ依存、サーバ不要。商用利用も無料。
+
+## ドキュメント
+
+- [トップページ](https://add-weekday.com/): 機能概要とデモ
+- [Web エディタ](https://add-weekday.com/engine): テキストを貼り付けて曜日を付与してコピー
+- [ライブラリ本体](https://add-weekday.com/addWeekday.js): UMD 形式、スクリプトタグから直接読込可能
+- [GitHub README](https://github.com/zohiro00/add-weekday/blob/main/README.md): API・オプション一覧
+
+## オプション一覧
+
+- `format`: 出力フォーマット（paren-ja / paren-ja-full / paren-en / bracket / space / 自由テンプレート）
+- `weekdayStyle`: 曜日表記（ja / ja-full / en-short / en-long）
+- `dateOrder`: 月日並び順（MDY / DMY）
+- `yearMode`: 年省略時の判定（current / next / nearest）
+- `overwrite`: 既存曜日タグの上書き（true / false）
+- `mdOnly`: mm/dd のみを対象にする（true / false）
+
+## よくある質問
+
+Q: 既に曜日が付いている日付は上書きされますか？
+A: デフォルトでは上書きしません。`overwrite: true` を指定すると再計算して上書きします。
+
+Q: 年が省略された日付の年はどう判定しますか？
+A: デフォルトは現在年。`yearMode` で `current`・`next`・`nearest` を選べます。
+
+Q: yyyy/mm/dd 形式にも対応していますか？
+A: はい。`4/20`・`04/20`・`2024/04/20` のすべてに対応します。
+
+Q: Node.js から require できますか？
+A: はい。UMD 形式なので `require()`・ESM・`<script>` タグのいずれでも動作します。
+
+Q: 英語の曜日表記に変更できますか？
+A: `weekdayStyle: "en-short"` で `Mon`、`"en-long"` で `Monday` を出力します。
+
+Q: 料金はかかりますか？
+A: 無料です。MIT ライセンスの OSS なので商用利用も可能です。
+
+## ライセンス
+
+MIT
