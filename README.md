@@ -151,8 +151,8 @@ Cloudflare ダッシュボード → Workers & Pages → add-weekday → Custom 
 
 | 操作 | 方法 |
 |------|------|
-| 実行 | `Cmd+Shift+D` (Mac) / `Ctrl+Shift+D` (Windows/Linux) |
-| コマンドパレット | `Add Weekday: 曜日を付与` |
+| コマンドパレット | `Add Weekday: 曜日を付与（上書きなし） / Add Weekday` |
+| 上書き変換 | `Add Weekday: 曜日を付与（上書き） / Overwrite Weekday` |
 
 - 選択範囲のみ変換 or ファイル全体を変換
 - 保存時自動変換（`addWeekday.runOnSave`）

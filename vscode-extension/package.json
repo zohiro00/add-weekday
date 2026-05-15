@@ -2,7 +2,7 @@
   "name": "add-weekday-vscode",
   "displayName": "Add Weekday",
   "description": "Automatically append Japanese/English day-of-week to dates in Markdown and plain text",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publisher": "zohiro00",
   "license": "MIT",
   "icon": "icon.png",
