@@ -21,6 +21,10 @@ There is no build step, package manager, or linter configured.
 - Branch naming: `fix/<topic>`, `feature/<topic>`, `docs/<topic>` etc.
 - Open a PR and merge via GitHub — do not push commits directly to `main`.
 
+## VSCode 拡張機能のリリース
+
+リリース手順は [`docs/vscode-extension-release.md`](./docs/vscode-extension-release.md) を参照。
+
 ## src/addWeekday.js と site/public/addWeekday.js の同期ルール
 
 - **`src/addWeekday.js` が唯一の編集対象**。`site/public/addWeekday.js` は直接編集禁止。
