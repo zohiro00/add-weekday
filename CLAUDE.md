@@ -21,20 +21,9 @@ There is no build step, package manager, or linter configured.
 - Branch naming: `fix/<topic>`, `feature/<topic>`, `docs/<topic>` etc.
 - Open a PR and merge via GitHub — do not push commits directly to `main`.
 
-## VSCode 拡張機能のリリース手順
+## VSCode 拡張機能のリリース
 
-1. `vscode-extension/package.json` の `version` を上げる（例: `0.1.1` → `0.1.2`）
-2. `vscode-extension/CHANGELOG.md` に変更内容を追記する
-3. PR を作成してマージ
-4. タグを push する（ワークフローが自動でビルド・Marketplace 公開まで行う）
-
-```bash
-git tag vscode-extension-v<version>
-git push origin vscode-extension-v<version>
-```
-
-- バージョンとタグが一致しないと CI が失敗する（`Validate version` ステップ）
-- `VSCE_PAT` シークレット（Marketplace の Personal Access Token）が GitHub に登録済みであること
+リリース手順は [`docs/vscode-extension-release.md`](./docs/vscode-extension-release.md) を参照。
 
 ## src/addWeekday.js と site/public/addWeekday.js の同期ルール
 
