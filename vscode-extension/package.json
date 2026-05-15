@@ -27,7 +27,8 @@
   "activationEvents": [
     "onLanguage:markdown",
     "onLanguage:plaintext",
-    "onCommand:addWeekday.run"
+    "onCommand:addWeekday.run",
+    "onCommand:addWeekday.runOverwrite"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -35,14 +36,10 @@
       {
         "command": "addWeekday.run",
         "title": "Add Weekday: 曜日を付与"
-      }
-    ],
-    "keybindings": [
+      },
       {
-        "command": "addWeekday.run",
-        "key": "ctrl+shift+d",
-        "mac": "cmd+shift+d",
-        "when": "editorTextFocus"
+        "command": "addWeekday.runOverwrite",
+        "title": "Add Weekday: 曜日を付与（上書き）"
       }
     ],
     "configuration": {
