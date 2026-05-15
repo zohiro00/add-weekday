@@ -1,0 +1,130 @@
+{
+  "name": "add-weekday",
+  "displayName": "Add Weekday",
+  "description": "Automatically append Japanese/English day-of-week to dates in Markdown and plain text",
+  "version": "0.1.0",
+  "publisher": "zohiro00",
+  "license": "MIT",
+  "icon": "icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zohiro00/add-weekday"
+  },
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other",
+    "Formatters"
+  ],
+  "keywords": [
+    "weekday",
+    "markdown",
+    "japanese",
+    "date",
+    "曜日"
+  ],
+  "activationEvents": [
+    "onLanguage:markdown",
+    "onLanguage:plaintext"
+  ],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "addWeekday.run",
+        "title": "Add Weekday: 曜日を付与"
+      }
+    ],
+    "configuration": {
+      "title": "Add Weekday",
+      "properties": {
+        "addWeekday.format": {
+          "type": "string",
+          "default": "paren-ja",
+          "enum": ["paren-ja", "paren-ja-full", "paren-en", "bracket", "space"],
+          "enumDescriptions": [
+            "4/20(月)",
+            "4/20（月）",
+            "4/20(Mon)",
+            "4/20[月]",
+            "4/20 月"
+          ],
+          "description": "Output format for weekday annotation"
+        },
+        "addWeekday.weekdayStyle": {
+          "type": ["string", "null"],
+          "default": null,
+          "enum": [null, "ja", "ja-full", "en-short", "en-long"],
+          "enumDescriptions": [
+            "Use format default",
+            "月/火/水/木/金/土/日",
+            "月曜日/火曜日/...",
+            "Mon/Tue/Wed/...",
+            "Monday/Tuesday/..."
+          ],
+          "description": "Weekday style override (null = use format default)"
+        },
+        "addWeekday.dateOrder": {
+          "type": "string",
+          "default": "MDY",
+          "enum": ["MDY", "DMY"],
+          "description": "Interpretation order for ambiguous dates like 4/20"
+        },
+        "addWeekday.yearMode": {
+          "type": "string",
+          "default": "current",
+          "enum": ["current", "next", "nearest"],
+          "enumDescriptions": [
+            "Always use current year",
+            "Use next year if the date has already passed",
+            "Use whichever year is closest to today"
+          ],
+          "description": "How to infer the year for dates without one"
+        },
+        "addWeekday.overwrite": {
+          "type": "boolean",
+          "default": false,
+          "description": "Re-tag dates that already have a weekday annotation"
+        },
+        "addWeekday.mdOnly": {
+          "type": "boolean",
+          "default": false,
+          "description": "Skip yyyy/mm/dd dates; only annotate mm/dd dates"
+        },
+        "addWeekday.targetLanguages": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": ["markdown", "plaintext"],
+          "description": "Language IDs for which the extension is active"
+        },
+        "addWeekday.runOnSave": {
+          "type": "boolean",
+          "default": false,
+          "description": "Automatically add weekday annotations when saving a file"
+        },
+        "addWeekday.showStatusBarItem": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show a status bar button to run the command"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "node esbuild.js",
+    "watch": "node esbuild.js --watch",
+    "package": "npm run compile && vsce package",
+    "publish-ext": "npm run compile && vsce publish",
+    "test": "node test/runTests.js",
+    "vscode:prepublish": "npm run compile"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "@vscode/test-electron": "^2.3.0",
+    "@vscode/vsce": "^2.22.0",
+    "esbuild": "^0.19.0",
+    "typescript": "^5.3.0"
+  }
+}
