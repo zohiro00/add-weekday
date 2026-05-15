@@ -5,11 +5,10 @@ import { getConfig } from './config';
 const processingDocuments = new Set<string>();
 
 export function activate(context: vscode.ExtensionContext): void {
-  // Register main command
-  const commandDisposable = vscode.commands.registerCommand('addWeekday.run', () => {
-    runCommand();
-  });
-  context.subscriptions.push(commandDisposable);
+  context.subscriptions.push(
+    vscode.commands.registerCommand('addWeekday.run', () => runCommand(false)),
+    vscode.commands.registerCommand('addWeekday.runOverwrite', () => runCommand(true)),
+  );
 
   // runOnSave listener — guard against re-entrant saves
   const saveDisposable = vscode.workspace.onWillSaveTextDocument(event => {
@@ -89,7 +88,7 @@ function buildEdit(
   return edit;
 }
 
-function runCommand(): void {
+function runCommand(forceOverwrite: boolean): void {
   const editor = vscode.window.activeTextEditor;
   if (!editor) return;
 
@@ -109,7 +108,7 @@ function runCommand(): void {
     weekdayStyle: cfg.weekdayStyle,
     dateOrder:    cfg.dateOrder,
     yearMode:     cfg.yearMode,
-    overwrite:    cfg.overwrite,
+    overwrite:    forceOverwrite || cfg.overwrite,
     mdOnly:       cfg.mdOnly,
     refDate:      new Date(),
   });
