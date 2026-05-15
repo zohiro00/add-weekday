@@ -21,11 +21,13 @@ Automatically append Japanese (or English) day-of-week characters to dates in Ma
 ## Usage
 
 1. Open a Markdown or plain text file
-2. Open the Command Palette (`Cmd+Shift+P` / `Ctrl+Shift+P`)
-3. Run **Add Weekday: 曜日を付与**
+2. Press **`Cmd+Shift+D`** (Mac) / **`Ctrl+Shift+D`** (Windows/Linux)  
+   — or open the Command Palette and run **Add Weekday: 曜日を付与**
 
 - If text is **selected**, only the selection is converted
 - If nothing is selected, the **entire document** is converted
+
+> Works great with **Obsidian vaults** — Daily Notes, Meeting Notes, and TODO lists with `mm/dd` dates are converted in one keystroke.
 
 ---
 

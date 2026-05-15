@@ -2,6 +2,8 @@ import * as vscode from 'vscode';
 import { runAddWeekday } from './core';
 import { getConfig } from './config';
 
+const processingDocuments = new Set<string>();
+
 export function activate(context: vscode.ExtensionContext): void {
   // Register main command
   const commandDisposable = vscode.commands.registerCommand('addWeekday.run', () => {
@@ -9,15 +11,24 @@ export function activate(context: vscode.ExtensionContext): void {
   });
   context.subscriptions.push(commandDisposable);
 
-  // runOnSave listener
+  // runOnSave listener — guard against re-entrant saves
   const saveDisposable = vscode.workspace.onWillSaveTextDocument(event => {
     const cfg = getConfig();
     if (!cfg.runOnSave) return;
     if (!cfg.targetLanguages.includes(event.document.languageId)) return;
 
+    const key = event.document.uri.toString();
+    if (processingDocuments.has(key)) return;
+
+    processingDocuments.add(key);
     const edit = buildEdit(event.document, cfg);
     if (edit) {
-      event.waitUntil(vscode.workspace.applyEdit(edit));
+      const cleanup = () => processingDocuments.delete(key);
+      event.waitUntil(
+        vscode.workspace.applyEdit(edit).then(cleanup, cleanup),
+      );
+    } else {
+      processingDocuments.delete(key);
     }
   });
   context.subscriptions.push(saveDisposable);

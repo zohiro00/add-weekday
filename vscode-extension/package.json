@@ -1,5 +1,5 @@
 {
-  "name": "add-weekday",
+  "name": "add-weekday-vscode",
   "displayName": "Add Weekday",
   "description": "Automatically append Japanese/English day-of-week to dates in Markdown and plain text",
   "version": "0.1.0",
@@ -26,7 +26,8 @@
   ],
   "activationEvents": [
     "onLanguage:markdown",
-    "onLanguage:plaintext"
+    "onLanguage:plaintext",
+    "onCommand:addWeekday.run"
   ],
   "main": "./dist/extension.js",
   "contributes": {
@@ -34,6 +35,14 @@
       {
         "command": "addWeekday.run",
         "title": "Add Weekday: 曜日を付与"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "addWeekday.run",
+        "key": "ctrl+shift+d",
+        "mac": "cmd+shift+d",
+        "when": "editorTextFocus"
       }
     ],
     "configuration": {

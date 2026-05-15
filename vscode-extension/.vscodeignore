@@ -4,6 +4,7 @@ src/**
 test/**
 types/**
 node_modules/**
+# Exclude source maps only — dist/extension.js must remain in the package
 dist/**/*.map
 tsconfig.json
 esbuild.js
