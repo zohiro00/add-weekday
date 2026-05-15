@@ -142,6 +142,26 @@ Cloudflare ダッシュボード → Workers & Pages → add-weekday → Custom 
 
 ---
 
+## VSCode 拡張機能
+
+[![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/zohiro00.add-weekday-vscode)](https://marketplace.visualstudio.com/items?itemName=zohiro00.add-weekday-vscode)
+[![Visual Studio Marketplace Installs](https://img.shields.io/visual-studio-marketplace/i/zohiro00.add-weekday-vscode)](https://marketplace.visualstudio.com/items?itemName=zohiro00.add-weekday-vscode)
+
+**[Marketplace からインストール](https://marketplace.visualstudio.com/items?itemName=zohiro00.add-weekday-vscode)**
+
+| 操作 | 方法 |
+|------|------|
+| 実行 | `Cmd+Shift+D` (Mac) / `Ctrl+Shift+D` (Windows/Linux) |
+| コマンドパレット | `Add Weekday: 曜日を付与` |
+
+- 選択範囲のみ変換 or ファイル全体を変換
+- 保存時自動変換（`addWeekday.runOnSave`）
+- フォーマット・曜日スタイルなどを VS Code 設定から変更可能
+
+詳細は [`vscode-extension/README.md`](./vscode-extension/README.md) を参照。
+
+---
+
 ## テスト
 
 ```bash
@@ -154,7 +174,6 @@ node addWeekday.test.js
 
 ## 今後の拡張案
 
-- VSCode 拡張機能
 - 日本語日付（例：4月20日）対応
 - 祝日付与
 
