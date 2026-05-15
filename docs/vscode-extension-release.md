@@ -12,9 +12,10 @@
 4. タグを push する
 
 ```bash
-git tag vscode-extension-v<version>
-git push origin vscode-extension-v<version>
+bash scripts/release-vscode-extension.sh
 ```
+
+バージョンは `package.json` から自動取得する。
 
 タグを push すると `.github/workflows/release-vscode-extension.yml` が起動し、ビルド → VSIX を GitHub Release にアップロード → Marketplace 公開まで自動で行う。
 
